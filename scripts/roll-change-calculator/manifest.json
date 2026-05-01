@@ -1,0 +1,19 @@
+{
+  "name": "Rollenwechsel Rechner",
+  "short_name": "Rollenwechsel",
+  "description": "Mobiler Rechner für die nächste Rollenwechsel-Zeit.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1210",
+  "theme_color": "#22c55e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
