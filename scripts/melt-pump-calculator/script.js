@@ -14,27 +14,27 @@ tabs.forEach((tab) => {
 
 const readNumber = (id, label) => {
   const element = $(id);
-  const value = Number(String(element.value).replace(',', '.'));
+  const value = Number(String(element.value).trim().replace(',', '.'));
 
   if (!Number.isFinite(value) || value <= 0) {
-    throw new Error(`${label} must be greater than zero.`);
+    throw new Error(`${label} muss größer als null sein.`);
   }
 
   return value;
 };
 
 const format = (value) => {
-  return value.toLocaleString(undefined, {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: value % 1 === 0 ? 0 : 2,
+  return value.toLocaleString('de-DE', {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: 1,
   });
 };
 
 const baseline = () => {
-  const thickness = readNumber('baseThickness', 'Current thickness');
-  const speed = readNumber('baseSpeed', 'Current speed');
-  const pump1 = readNumber('basePump1', 'Current Pump 1');
-  const pump2 = readNumber('basePump2', 'Current Pump 2');
+  const thickness = readNumber('baseThickness', 'Aktuelle Stärke');
+  const speed = readNumber('baseSpeed', 'Aktuelle Geschwindigkeit');
+  const pump1 = readNumber('basePump1', 'Aktuelle Pumpe 1');
+  const pump2 = readNumber('basePump2', 'Aktuelle Pumpe 2');
 
   return { thickness, speed, pump1, pump2 };
 };
@@ -46,8 +46,8 @@ const showError = (message) => {
 $('calculatePumps').addEventListener('click', () => {
   try {
     const base = baseline();
-    const targetThickness = readNumber('targetThicknessPumps', 'Target thickness');
-    const targetSpeed = readNumber('targetSpeedPumps', 'Target speed');
+    const targetThickness = readNumber('targetThicknessPumps', 'Ziel-Stärke');
+    const targetSpeed = readNumber('targetSpeedPumps', 'Ziel-Geschwindigkeit');
 
     const baseFactor = base.thickness * base.speed;
     const targetFactor = targetThickness * targetSpeed;
@@ -63,8 +63,8 @@ $('calculatePumps').addEventListener('click', () => {
 $('calculateSpeed').addEventListener('click', () => {
   try {
     const base = baseline();
-    const targetThickness = readNumber('targetThicknessSpeed', 'Target thickness');
-    const targetPump1 = readNumber('targetPump1Speed', 'Pump 1');
+    const targetThickness = readNumber('targetThicknessSpeed', 'Ziel-Stärke');
+    const targetPump1 = readNumber('targetPump1Speed', 'Pumpe 1');
 
     const pumpRatio = targetPump1 / base.pump1;
     const targetFactor = base.thickness * base.speed * pumpRatio;
