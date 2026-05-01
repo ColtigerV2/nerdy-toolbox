@@ -1,41 +1,11 @@
 # Nerdy Toolbox
 
-A small static web toolbox by **ColtigerV2**.
+This repository is no longer used as a public GitHub Pages toolbox.
 
-## What it is
+I use GitHub mainly as a place for my own scripts, experiments and learning projects.
 
-Nerdy Toolbox is a lightweight browser-only project with practical mini tools for everyday nerd problems.
+## Notes
 
-Current tools:
-
-- **Unit Converter** — convert common workshop and everyday units
-- **Workday Helper** — calculate work time after breaks
-- **FPV Battery Checker** — estimate LiPo cell voltage from pack voltage
-
-## Files
-
-```text
-index.html   # Page structure and tool UI
-style.css    # Green dark theme and responsive layout
-script.js    # Tool logic and small interactions
-```
-
-## GitHub Pages
-
-This repository includes a GitHub Actions workflow for deploying the static site to GitHub Pages.
-
-Once GitHub Pages is enabled for this repository, the project should be available at:
-
-```text
-https://ColtigerV2.github.io/nerdy-toolbox/
-```
-
-## Roadmap
-
-Possible next steps:
-
-- Add more practical calculators
-- Add a changelog section
-- Improve mobile layout further
-- Add screenshots to the README
-- Add more FPV or workshop-related tools
+- Public website files have been removed.
+- Future scripts can be added in folders such as `scripts/`, `python/`, `bash/` or `experiments/`.
+- The repository can stay public, be made private, or be archived later.
