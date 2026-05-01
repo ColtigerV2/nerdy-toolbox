@@ -22,6 +22,8 @@ script.js    # Tool logic and small interactions
 
 ## GitHub Pages
 
+This repository includes a GitHub Actions workflow for deploying the static site to GitHub Pages.
+
 Once GitHub Pages is enabled for this repository, the project should be available at:
 
 ```text
