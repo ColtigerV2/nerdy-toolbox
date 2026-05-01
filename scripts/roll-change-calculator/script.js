@@ -3,11 +3,25 @@ const $ = (id) => document.getElementById(id);
 let reminderTimers = [];
 let lastCalculation = null;
 
-const readNumber = (id, label) => {
-  const value = Number(String($(id).value).trim().replace(',', '.'));
+const readNumber = (id, label, options = {}) => {
+  const raw = String($(id).value).trim().replace(',', '.');
+  const value = Number(raw);
+  const allowZero = options.allowZero === true;
 
+  if (!Number.isFinite(value) || (allowZero ? value < 0 : value <= 0)) {
+    throw new Error(`${label} muss ${allowZero ? 'größer oder gleich null' : 'größer als null'} sein.`);
+  }
+
+  return value;
+};
+
+const readOptionalPositiveNumber = (id) => {
+  const raw = String($(id).value).trim();
+  if (!raw) return null;
+
+  const value = Number(raw.replace(',', '.'));
   if (!Number.isFinite(value) || value <= 0) {
-    throw new Error(`${label} muss größer als null sein.`);
+    throw new Error('Auftragslänge gesamt muss größer als null sein.');
   }
 
   return value;
@@ -27,6 +41,13 @@ const formatDuration = (seconds) => {
   return `${pad(hours)}:${pad(minutes)}:${pad(restSeconds)}`;
 };
 
+const formatNumber = (value) => {
+  return value.toLocaleString('de-DE', {
+    maximumFractionDigits: 1,
+    minimumFractionDigits: value % 1 === 0 ? 0 : 1,
+  });
+};
+
 const defaultStartTime = () => {
   const now = new Date();
   now.setMilliseconds(0);
@@ -44,16 +65,33 @@ const calculateRollChange = () => {
 
   const start = new Date(startValue);
   const speed = readNumber('speed', 'Geschwindigkeit');
-  const targetLength = readNumber('targetLength', 'Soll-Länge');
+  const targetLength = readNumber('targetLength', 'Rollenlänge');
   const warningSeconds = Number(String($('warningSeconds').value || '0').replace(',', '.'));
+  const orderLength = readOptionalPositiveNumber('orderLength');
+  const currentLength = readNumber('currentLength', 'Bereits gelaufen', { allowZero: true });
 
   if (!Number.isFinite(warningSeconds) || warningSeconds < 0) {
     throw new Error('Vorwarnung darf nicht negativ sein.');
   }
 
+  if (orderLength !== null && currentLength > orderLength) {
+    throw new Error('Bereits gelaufen darf nicht größer als die Auftragslänge sein.');
+  }
+
   const durationSeconds = (targetLength / speed) * 60;
   const changeTime = new Date(start.getTime() + durationSeconds * 1000);
   const warningTime = new Date(changeTime.getTime() - warningSeconds * 1000);
+
+  let remainingLength = null;
+  let remainingChanges = null;
+  let orderEndTime = null;
+
+  if (orderLength !== null) {
+    remainingLength = Math.max(0, orderLength - currentLength);
+    remainingChanges = Math.ceil(remainingLength / targetLength);
+    const orderDurationSeconds = (remainingLength / speed) * 60;
+    orderEndTime = new Date(start.getTime() + orderDurationSeconds * 1000);
+  }
 
   lastCalculation = {
     start,
@@ -63,12 +101,25 @@ const calculateRollChange = () => {
     durationSeconds,
     changeTime,
     warningTime,
+    orderLength,
+    currentLength,
+    remainingLength,
+    remainingChanges,
+    orderEndTime,
   };
 
   $('durationResult').textContent = formatDuration(durationSeconds);
   $('warningResult').textContent = formatTime(warningTime);
   $('changeResult').textContent = formatTime(changeTime);
-  $('statusText').textContent = `Berechnet: Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
+  $('remainingLengthResult').textContent = remainingLength === null ? '-' : formatNumber(remainingLength);
+  $('remainingChangesResult').textContent = remainingChanges === null ? '-' : String(remainingChanges);
+  $('orderEndResult').textContent = orderEndTime === null ? '-' : formatTime(orderEndTime);
+
+  const orderText = orderEndTime === null
+    ? ''
+    : ` Auftragsende um ${formatTime(orderEndTime)} Uhr, noch ${remainingChanges} Wechsel.`;
+
+  $('statusText').textContent = `Berechnet: nächster Rollenwechsel um ${formatTime(changeTime)} Uhr.${orderText}`;
 
   return lastCalculation;
 };
