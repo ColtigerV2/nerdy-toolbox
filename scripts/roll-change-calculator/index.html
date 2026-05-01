@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mobiler Rechner für Rollenwechsel-Zeiten." />
+  <meta name="theme-color" content="#22c55e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Rollenwechsel" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Rollenwechsel Rechner</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">ColtigerV2 Script</p>
+      <h1>Rollenwechsel Rechner</h1>
+      <p>
+        Startpunkt, Geschwindigkeit und Soll-Länge eingeben. Die App berechnet, wann der nächste Rollenwechsel fällig ist.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2>Eingabe</h2>
+      <p class="hint">Die Laufzeit ergibt sich aus Soll-Länge geteilt durch Geschwindigkeit.</p>
+      <div class="grid two">
+        <label>
+          Startzeit
+          <input id="startTime" type="datetime-local" />
+        </label>
+        <label>
+          Geschwindigkeit [m/min]
+          <input id="speed" inputmode="decimal" />
+        </label>
+        <label>
+          Soll-Länge [m]
+          <input id="targetLength" inputmode="decimal" />
+        </label>
+        <label>
+          Vorwarnung [min]
+          <input id="warningMinutes" inputmode="decimal" value="5" />
+        </label>
+      </div>
+      <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
+      <button class="secondary" id="notifyButton">Benachrichtigung aktivieren</button>
+    </section>
+
+    <section class="results">
+      <div>
+        <span>Laufzeit</span>
+        <strong id="durationResult">-</strong>
+        <small>hh:mm</small>
+      </div>
+      <div>
+        <span>Vorwarnung</span>
+        <strong id="warningResult">-</strong>
+        <small>Uhr</small>
+      </div>
+      <div>
+        <span>Rollenwechsel</span>
+        <strong id="changeResult">-</strong>
+        <small>Uhr</small>
+      </div>
+    </section>
+
+    <section class="card status-card">
+      <h2>Status</h2>
+      <p id="statusText">Noch keine Berechnung gestartet.</p>
+      <p class="hint">
+        Lokale Benachrichtigungen funktionieren am zuverlässigsten, wenn die App geöffnet bleibt oder als PWA gestartet wurde.
+      </p>
+    </section>
+
+    <section class="card formula-card">
+      <h2>Rechenbasis</h2>
+      <p>Laufzeit in Minuten = Soll-Länge ÷ Geschwindigkeit</p>
+      <p>Wechselzeit = Startzeit + Laufzeit</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
