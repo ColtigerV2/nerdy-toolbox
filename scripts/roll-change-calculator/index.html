@@ -20,7 +20,7 @@
       <p class="eyebrow">ColtigerV2 Script</p>
       <h1>Rollenwechsel Rechner</h1>
       <p>
-        Startpunkt, Geschwindigkeit und Soll-Länge eingeben. Die App berechnet, wann der nächste Rollenwechsel fällig ist.
+        Startpunkt, Geschwindigkeit und Soll-Länge eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel fällig ist.
       </p>
     </header>
 
@@ -30,7 +30,7 @@
       <div class="grid two">
         <label>
           Startzeit
-          <input id="startTime" type="datetime-local" />
+          <input id="startTime" type="datetime-local" step="1" />
         </label>
         <label>
           Geschwindigkeit [m/min]
@@ -41,8 +41,8 @@
           <input id="targetLength" inputmode="decimal" />
         </label>
         <label>
-          Vorwarnung [min]
-          <input id="warningMinutes" inputmode="decimal" value="5" />
+          Vorwarnung [s]
+          <input id="warningSeconds" inputmode="decimal" value="300" />
         </label>
       </div>
       <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
@@ -53,7 +53,7 @@
       <div>
         <span>Laufzeit</span>
         <strong id="durationResult">-</strong>
-        <small>hh:mm</small>
+        <small>hh:mm:ss</small>
       </div>
       <div>
         <span>Vorwarnung</span>
@@ -79,6 +79,7 @@
       <h2>Rechenbasis</h2>
       <p>Laufzeit in Minuten = Soll-Länge ÷ Geschwindigkeit</p>
       <p>Wechselzeit = Startzeit + Laufzeit</p>
+      <p>Vorwarnung wird in Sekunden vor dem Rollenwechsel berechnet.</p>
     </section>
   </main>
 
