@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Pumpenrechner Icon">
+  <rect width="512" height="512" rx="112" fill="#0b1210"/>
+  <circle cx="256" cy="256" r="168" fill="#13221b" stroke="#22c55e" stroke-width="18"/>
+  <path d="M168 294h176" stroke="#84cc16" stroke-width="32" stroke-linecap="round"/>
+  <path d="M178 218h156" stroke="#22c55e" stroke-width="32" stroke-linecap="round"/>
+  <path d="M206 142h100" stroke="#bbf7d0" stroke-width="32" stroke-linecap="round"/>
+  <path d="M350 142l-44 152" stroke="#bbf7d0" stroke-width="22" stroke-linecap="round"/>
+  <text x="256" y="392" text-anchor="middle" font-family="Arial, sans-serif" font-size="74" font-weight="900" fill="#edf7f0">P2</text>
+</svg>
