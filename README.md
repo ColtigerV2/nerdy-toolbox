@@ -1,11 +1,21 @@
 # Nerdy Toolbox
 
-This repository is no longer used as a public GitHub Pages toolbox.
+A small collection of personal scripts and mobile-friendly mini apps by **ColtigerV2**.
 
-I use GitHub mainly as a place for my own scripts, experiments and learning projects.
+## Apps
+
+- `scripts/melt-pump-calculator/` — Berechnung Schmelzepumpen
+- `scripts/roll-change-calculator/` — Rollenwechsel Rechner
+
+## GitHub Pages
+
+If GitHub Pages is enabled with GitHub Actions, the apps are available at:
+
+```text
+https://ColtigerV2.github.io/nerdy-toolbox/scripts/melt-pump-calculator/
+https://ColtigerV2.github.io/nerdy-toolbox/scripts/roll-change-calculator/
+```
 
 ## Notes
 
-- Public website files have been removed.
-- Future scripts can be added in folders such as `scripts/`, `python/`, `bash/` or `experiments/`.
-- The repository can stay public, be made private, or be archived later.
+These tools are personal helper scripts and experiments. They can be extended step by step.
