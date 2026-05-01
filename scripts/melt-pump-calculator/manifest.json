@@ -1,0 +1,19 @@
+{
+  "name": "Berechnung Schmelzepumpen",
+  "short_name": "Pumpenrechner",
+  "description": "Mobiler Rechner für Stärke, Geschwindigkeit und Schmelzepumpen.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1210",
+  "theme_color": "#22c55e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
