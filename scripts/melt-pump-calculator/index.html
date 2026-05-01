@@ -1,95 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mobile-friendly melt pump calculator based on proportional rule-of-three calculations." />
-  <title>Melt Pump Calculator</title>
+  <meta name="description" content="Mobiler Rechner für Schmelzepumpen auf Basis von Dreisatz-Berechnungen." />
+  <title>Berechnung Schmelzepumpen</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app-shell">
     <header class="app-header">
       <p class="eyebrow">ColtigerV2 Script</p>
-      <h1>Melt Pump Calculator</h1>
+      <h1>Berechnung Schmelzepumpen</h1>
       <p>
-        A mobile-friendly calculator for melt pump settings. The first version uses proportional rule-of-three calculations.
+        Mobiler Rechner für Stärke, Geschwindigkeit und Pumpendrehzahlen. Die erste Version nutzt den gleichen Dreisatz wie dein Beispieltool.
       </p>
     </header>
 
     <section class="card">
-      <h2>Current machine data</h2>
-      <p class="hint">Enter the current known values. These values are the baseline for all calculations.</p>
+      <h2>Eingabe aktuelle Daten</h2>
+      <p class="hint">Diese Werte sind die Basis für alle weiteren Berechnungen.</p>
       <div class="grid four">
         <label>
-          Thickness [µm]
-          <input id="baseThickness" type="number" inputmode="decimal" placeholder="e.g. 50" />
+          Stärke [µm]
+          <input id="baseThickness" inputmode="decimal" placeholder="364" />
         </label>
         <label>
-          Speed [m/min]
-          <input id="baseSpeed" type="number" inputmode="decimal" placeholder="e.g. 120" />
+          Geschwindigkeit [m/min]
+          <input id="baseSpeed" inputmode="decimal" placeholder="90" />
         </label>
         <label>
-          Pump 1 [rpm]
-          <input id="basePump1" type="number" inputmode="decimal" placeholder="e.g. 35" />
+          Pumpe 1 [rpm]
+          <input id="basePump1" inputmode="decimal" placeholder="52" />
         </label>
         <label>
-          Pump 2 [rpm]
-          <input id="basePump2" type="number" inputmode="decimal" placeholder="e.g. 35" />
+          Pumpe 2 [rpm]
+          <input id="basePump2" inputmode="decimal" placeholder="29,7" />
         </label>
       </div>
     </section>
 
-    <section class="tabs" aria-label="Calculation modes">
-      <button class="tab active" data-tab="pumps">Calculate p1 + p2</button>
-      <button class="tab" data-tab="speed">Calculate v + p2</button>
+    <section class="tabs" aria-label="Berechnungsarten">
+      <button class="tab active" data-tab="pumps">Berechnung p1 + p2</button>
+      <button class="tab" data-tab="speed">Berechnung v + p2</button>
     </section>
 
     <section class="card tab-panel active" id="tab-pumps">
-      <h2>Calculate Pump 1 + Pump 2</h2>
-      <p class="hint">Enter target thickness and target speed. The calculator scales both pump speeds proportionally.</p>
+      <h2>Berechnung p1 + p2</h2>
+      <p class="hint">Ziel-Stärke und Ziel-Geschwindigkeit eingeben. Pumpe 1 und Pumpe 2 werden proportional berechnet.</p>
       <div class="grid two">
         <label>
-          Target thickness [µm]
-          <input id="targetThicknessPumps" type="number" inputmode="decimal" placeholder="e.g. 60" />
+          Stärke [µm]
+          <input id="targetThicknessPumps" inputmode="decimal" placeholder="233" />
         </label>
         <label>
-          Target speed [m/min]
-          <input id="targetSpeedPumps" type="number" inputmode="decimal" placeholder="e.g. 100" />
+          Geschwindigkeit [m/min]
+          <input id="targetSpeedPumps" inputmode="decimal" placeholder="150" />
         </label>
       </div>
-      <button class="primary" id="calculatePumps">Calculate</button>
+      <button class="primary" id="calculatePumps">Berechnen</button>
       <div class="results">
-        <div><span>Pump 1</span><strong id="resultPump1">-</strong><small>rpm</small></div>
-        <div><span>Pump 2</span><strong id="resultPump2">-</strong><small>rpm</small></div>
+        <div><span>Pumpe 1</span><strong id="resultPump1">-</strong><small>rpm</small></div>
+        <div><span>Pumpe 2</span><strong id="resultPump2">-</strong><small>rpm</small></div>
       </div>
     </section>
 
     <section class="card tab-panel" id="tab-speed">
-      <h2>Calculate Speed + Pump 2</h2>
-      <p class="hint">Enter target thickness and Pump 1. The calculator derives the matching line speed and Pump 2.</p>
+      <h2>Berechnung v + p2</h2>
+      <p class="hint">Ziel-Stärke und Pumpe 1 eingeben. Geschwindigkeit und Pumpe 2 werden berechnet.</p>
       <div class="grid two">
         <label>
-          Target thickness [µm]
-          <input id="targetThicknessSpeed" type="number" inputmode="decimal" placeholder="e.g. 60" />
+          Stärke [µm]
+          <input id="targetThicknessSpeed" inputmode="decimal" placeholder="233" />
         </label>
         <label>
-          Pump 1 [rpm]
-          <input id="targetPump1Speed" type="number" inputmode="decimal" placeholder="e.g. 42" />
+          Pumpe 1 [rpm]
+          <input id="targetPump1Speed" inputmode="decimal" placeholder="50" />
         </label>
       </div>
-      <button class="primary" id="calculateSpeed">Calculate</button>
+      <button class="primary" id="calculateSpeed">Berechnen</button>
       <div class="results">
-        <div><span>Speed</span><strong id="resultSpeed">-</strong><small>m/min</small></div>
-        <div><span>Pump 2</span><strong id="resultPump2Speed">-</strong><small>rpm</small></div>
+        <div><span>Geschwindigkeit</span><strong id="resultSpeed">-</strong><small>m/min</small></div>
+        <div><span>Pumpe 2</span><strong id="resultPump2Speed">-</strong><small>rpm</small></div>
       </div>
     </section>
 
     <section class="card formula-card">
-      <h2>Calculation basis</h2>
+      <h2>Rechenbasis</h2>
       <p>
-        Base factor = current thickness × current speed. Target values are scaled proportionally.
-        This is a first version and can be adjusted later if your real machine needs correction factors.
+        Basisfaktor = aktuelle Stärke × aktuelle Geschwindigkeit. Zielwerte werden proportional über diesen Faktor skaliert.
+      </p>
+      <p>
+        Beispiel: 364 µm, 90 m/min, P1 52 rpm, P2 29,7 rpm → bei 233 µm und 150 m/min ergibt das P1 55,5 rpm und P2 31,7 rpm.
       </p>
     </section>
   </main>
