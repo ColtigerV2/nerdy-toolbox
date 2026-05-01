@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mobile-friendly melt pump calculator based on proportional rule-of-three calculations." />
+  <title>Melt Pump Calculator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">ColtigerV2 Script</p>
+      <h1>Melt Pump Calculator</h1>
+      <p>
+        A mobile-friendly calculator for melt pump settings. The first version uses proportional rule-of-three calculations.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2>Current machine data</h2>
+      <p class="hint">Enter the current known values. These values are the baseline for all calculations.</p>
+      <div class="grid four">
+        <label>
+          Thickness [µm]
+          <input id="baseThickness" type="number" inputmode="decimal" placeholder="e.g. 50" />
+        </label>
+        <label>
+          Speed [m/min]
+          <input id="baseSpeed" type="number" inputmode="decimal" placeholder="e.g. 120" />
+        </label>
+        <label>
+          Pump 1 [rpm]
+          <input id="basePump1" type="number" inputmode="decimal" placeholder="e.g. 35" />
+        </label>
+        <label>
+          Pump 2 [rpm]
+          <input id="basePump2" type="number" inputmode="decimal" placeholder="e.g. 35" />
+        </label>
+      </div>
+    </section>
+
+    <section class="tabs" aria-label="Calculation modes">
+      <button class="tab active" data-tab="pumps">Calculate p1 + p2</button>
+      <button class="tab" data-tab="speed">Calculate v + p2</button>
+    </section>
+
+    <section class="card tab-panel active" id="tab-pumps">
+      <h2>Calculate Pump 1 + Pump 2</h2>
+      <p class="hint">Enter target thickness and target speed. The calculator scales both pump speeds proportionally.</p>
+      <div class="grid two">
+        <label>
+          Target thickness [µm]
+          <input id="targetThicknessPumps" type="number" inputmode="decimal" placeholder="e.g. 60" />
+        </label>
+        <label>
+          Target speed [m/min]
+          <input id="targetSpeedPumps" type="number" inputmode="decimal" placeholder="e.g. 100" />
+        </label>
+      </div>
+      <button class="primary" id="calculatePumps">Calculate</button>
+      <div class="results">
+        <div><span>Pump 1</span><strong id="resultPump1">-</strong><small>rpm</small></div>
+        <div><span>Pump 2</span><strong id="resultPump2">-</strong><small>rpm</small></div>
+      </div>
+    </section>
+
+    <section class="card tab-panel" id="tab-speed">
+      <h2>Calculate Speed + Pump 2</h2>
+      <p class="hint">Enter target thickness and Pump 1. The calculator derives the matching line speed and Pump 2.</p>
+      <div class="grid two">
+        <label>
+          Target thickness [µm]
+          <input id="targetThicknessSpeed" type="number" inputmode="decimal" placeholder="e.g. 60" />
+        </label>
+        <label>
+          Pump 1 [rpm]
+          <input id="targetPump1Speed" type="number" inputmode="decimal" placeholder="e.g. 42" />
+        </label>
+      </div>
+      <button class="primary" id="calculateSpeed">Calculate</button>
+      <div class="results">
+        <div><span>Speed</span><strong id="resultSpeed">-</strong><small>m/min</small></div>
+        <div><span>Pump 2</span><strong id="resultPump2Speed">-</strong><small>rpm</small></div>
+      </div>
+    </section>
+
+    <section class="card formula-card">
+      <h2>Calculation basis</h2>
+      <p>
+        Base factor = current thickness × current speed. Target values are scaled proportionally.
+        This is a first version and can be adjusted later if your real machine needs correction factors.
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
