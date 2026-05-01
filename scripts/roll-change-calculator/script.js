@@ -16,21 +16,22 @@ const readNumber = (id, label) => {
 const pad = (value) => String(value).padStart(2, '0');
 
 const formatTime = (date) => {
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 };
 
-const formatDuration = (minutes) => {
-  const totalMinutes = Math.round(minutes);
-  const hours = Math.floor(totalMinutes / 60);
-  const rest = totalMinutes % 60;
-  return `${pad(hours)}:${pad(rest)}`;
+const formatDuration = (seconds) => {
+  const totalSeconds = Math.round(seconds);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const restSeconds = totalSeconds % 60;
+  return `${pad(hours)}:${pad(minutes)}:${pad(restSeconds)}`;
 };
 
 const defaultStartTime = () => {
   const now = new Date();
-  now.setSeconds(0, 0);
+  now.setMilliseconds(0);
   const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
-  $('startTime').value = local.toISOString().slice(0, 16);
+  $('startTime').value = local.toISOString().slice(0, 19);
 };
 
 defaultStartTime();
@@ -44,27 +45,27 @@ const calculateRollChange = () => {
   const start = new Date(startValue);
   const speed = readNumber('speed', 'Geschwindigkeit');
   const targetLength = readNumber('targetLength', 'Soll-Länge');
-  const warningMinutes = Number(String($('warningMinutes').value || '0').replace(',', '.'));
+  const warningSeconds = Number(String($('warningSeconds').value || '0').replace(',', '.'));
 
-  if (!Number.isFinite(warningMinutes) || warningMinutes < 0) {
+  if (!Number.isFinite(warningSeconds) || warningSeconds < 0) {
     throw new Error('Vorwarnung darf nicht negativ sein.');
   }
 
-  const durationMinutes = targetLength / speed;
-  const changeTime = new Date(start.getTime() + durationMinutes * 60 * 1000);
-  const warningTime = new Date(changeTime.getTime() - warningMinutes * 60 * 1000);
+  const durationSeconds = (targetLength / speed) * 60;
+  const changeTime = new Date(start.getTime() + durationSeconds * 1000);
+  const warningTime = new Date(changeTime.getTime() - warningSeconds * 1000);
 
   lastCalculation = {
     start,
     speed,
     targetLength,
-    warningMinutes,
-    durationMinutes,
+    warningSeconds,
+    durationSeconds,
     changeTime,
     warningTime,
   };
 
-  $('durationResult').textContent = formatDuration(durationMinutes);
+  $('durationResult').textContent = formatDuration(durationSeconds);
   $('warningResult').textContent = formatTime(warningTime);
   $('changeResult').textContent = formatTime(changeTime);
   $('statusText').textContent = `Berechnet: Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
@@ -117,9 +118,9 @@ const scheduleReminder = async () => {
       throw new Error('Die berechnete Wechselzeit liegt bereits in der Vergangenheit.');
     }
 
-    if (warningDelay > 0 && calculation.warningMinutes > 0) {
+    if (warningDelay > 0 && calculation.warningSeconds > 0) {
       reminderTimers.push(setTimeout(() => {
-        notify('Rollenwechsel bald fällig', `Noch ca. ${calculation.warningMinutes} Minuten bis zum Rollenwechsel um ${formatTime(calculation.changeTime)} Uhr.`);
+        notify('Rollenwechsel bald fällig', `Noch ca. ${Math.round(calculation.warningSeconds)} Sekunden bis zum Rollenwechsel um ${formatTime(calculation.changeTime)} Uhr.`);
       }, warningDelay));
     }
 
