@@ -22,8 +22,10 @@ const fields = [
   {
     key: 'Chill',
     label: 'Chill',
-    action: 'Chill-Werte prüfen und einstellen.',
+    action: 'Chill-Wert prüfen und einstellen.',
     patterns: [
+      /^\s*Abzug\s+([\d,.]+\s*(?:m\/min)?)/im,
+      /\bAbzug\s*[:\-]?\s*([\d,.]+\s*(?:m\/min)?)/i,
       /^\s*Chill\s+([^\n]+)/im,
       /\bChill\s*[:\-]?\s*([^\n]+)/i,
     ],
