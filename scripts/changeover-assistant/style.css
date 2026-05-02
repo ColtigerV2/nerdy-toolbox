@@ -6,7 +6,6 @@
   --brand: #22c55e;
   --brand-2: #84cc16;
   --warning: #facc15;
-  --danger: #fb7185;
   --shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
 }
 
@@ -25,7 +24,7 @@ body {
 }
 
 .app-shell {
-  width: min(1180px, calc(100% - 28px));
+  width: min(980px, calc(100% - 28px));
   margin: 0 auto;
   padding: 28px 0 48px;
 }
@@ -78,36 +77,37 @@ h2 {
   box-shadow: var(--shadow);
 }
 
-.form-grid {
+.comparison-card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 10px;
 }
 
-.grid {
+.comparison-header,
+.comparison-row {
   display: grid;
-  gap: 14px;
-  margin-top: 18px;
+  grid-template-columns: minmax(92px, 0.9fr) 1fr 1fr;
+  gap: 10px;
+  align-items: center;
 }
 
-.grid.two {
-  grid-template-columns: repeat(2, 1fr);
+.comparison-header {
+  color: var(--muted);
+  font-weight: 900;
+  padding: 0 2px;
 }
 
-label {
-  display: grid;
-  gap: 7px;
+.comparison-row label {
   color: var(--text);
-  font-size: 0.9rem;
-  font-weight: 750;
+  font-size: 0.96rem;
+  font-weight: 850;
 }
 
 input {
   width: 100%;
-  min-height: 48px;
+  min-height: 46px;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 0 14px;
+  border-radius: 14px;
+  padding: 0 12px;
   outline: none;
   background: rgba(5, 14, 10, 0.72);
   color: var(--text);
@@ -178,16 +178,25 @@ input:focus {
   border-radius: 18px;
 }
 
-@media (max-width: 980px) {
-  .form-grid,
-  .grid.two {
+@media (max-width: 620px) {
+  .comparison-header {
+    display: none;
+  }
+
+  .comparison-row {
     grid-template-columns: 1fr;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .comparison-row:last-child {
+    border-bottom: 0;
   }
 }
 
 @media (max-width: 520px) {
   .app-shell {
-    width: min(100% - 18px, 1180px);
+    width: min(100% - 18px, 980px);
     padding-top: 14px;
   }
 
