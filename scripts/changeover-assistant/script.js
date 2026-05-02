@@ -5,28 +5,19 @@ const fields = [
     key: 'Material',
     label: 'Material',
     action: 'Material prüfen und bei Bedarf wechseln.',
-    patterns: [
-      /^\s*Material\s+([^\n]+)/im,
-      /\bMaterial\s*[:\-]?\s*([^\n]+)/i,
-    ],
+    patterns: [],
   },
   {
     key: 'Thickness',
     label: 'Stärke',
     action: 'Stärke umstellen und Messung/Freigabe durchführen.',
-    patterns: [
-      /^\s*St[äa]rke\s+([\d,.]+\s*µ?)/im,
-      /\bSt[äa]rke\s*[:\-]?\s*([\d,.]+\s*µ?)/i,
-    ],
+    patterns: [],
   },
   {
     key: 'Width',
     label: 'Breite',
     action: 'Breite einstellen und Randbeschnitt prüfen.',
-    patterns: [
-      /^\s*Breite\s+([\d,.]+\s*(?:mm)?)/im,
-      /\bBreite\s*[:\-]?\s*([\d,.]+\s*(?:mm)?)/i,
-    ],
+    patterns: [],
   },
   {
     key: 'Chill',
@@ -198,10 +189,30 @@ const cleanExtractedValue = (value) => normalize(value)
   .replace(/^(Food|Qualit[äa]t)\s+/i, '')
   .trim();
 
+const extractExtrusionMaterialParts = (text) => {
+  const lines = text.split(/\n+/).map((line) => cleanExtractedValue(line));
+  const materialLine = lines.find((line) => /^Material\s+/i.test(line) && !/KA1|KA1-PE|PE\s*50|P199/i.test(line));
+
+  if (!materialLine) return {};
+
+  const cleaned = materialLine.replace(/^Material\s*[:\-]?\s*/i, '').trim();
+  const match = cleaned.match(/^([A-Z0-9]+)\s+([\d,.]+)\s+([\d,.]+)/i);
+
+  if (!match) return { Material: cleaned };
+
+  return {
+    Material: match[1],
+    Thickness: match[2],
+    Width: match[3],
+  };
+};
+
 const extractValues = (text) => {
-  const values = {};
+  const values = extractExtrusionMaterialParts(text);
 
   fields.forEach((field) => {
+    if (values[field.key]) return;
+
     for (const pattern of field.patterns || []) {
       const match = text.match(pattern);
       if (match && match[1]) {
