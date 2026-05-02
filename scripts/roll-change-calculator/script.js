@@ -63,16 +63,24 @@ const formatNumber = (value) => {
   });
 };
 
+const fillStartTime = (date) => {
+  date.setMilliseconds(0);
+  $('startDate').value = formatDateInput(date);
+  $('startHour').value = pad(date.getHours());
+  $('startMinute').value = pad(date.getMinutes());
+  $('startSecond').value = pad(date.getSeconds());
+};
+
 const defaultStartTime = () => {
-  const now = new Date();
-  now.setMilliseconds(0);
-  $('startDate').value = formatDateInput(now);
-  $('startHour').value = pad(now.getHours());
-  $('startMinute').value = pad(now.getMinutes());
-  $('startSecond').value = pad(now.getSeconds());
+  fillStartTime(new Date());
 };
 
 defaultStartTime();
+
+$('useNowButton').addEventListener('click', () => {
+  fillStartTime(new Date());
+  $('statusText').textContent = `Aktuelle Zeit übernommen: ${formatTime(new Date())} Uhr.`;
+});
 
 const readStartDate = () => {
   const dateValue = $('startDate').value;
