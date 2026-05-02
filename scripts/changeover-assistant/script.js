@@ -189,6 +189,11 @@ const cleanExtractedValue = (value) => normalize(value)
   .replace(/^(Food|Qualit[äa]t)\s+/i, '')
   .trim();
 
+const normalizeMaterialCode = (code) => {
+  const match = normalize(code).toUpperCase().match(/P\s*(\d{3,4})/);
+  return match ? `P${match[1]}` : cleanExtractedValue(code);
+};
+
 const extractExtrusionMaterialParts = (text) => {
   const lines = text.split(/\n+/).map((line) => cleanExtractedValue(line));
   const materialLine = lines.find((line) => /^Material\s+/i.test(line) && !/KA1|KA1-PE|PE\s*50|P199/i.test(line));
@@ -196,12 +201,12 @@ const extractExtrusionMaterialParts = (text) => {
   if (!materialLine) return {};
 
   const cleaned = materialLine.replace(/^Material\s*[:\-]?\s*/i, '').trim();
-  const match = cleaned.match(/^([A-Z0-9]+)\s+([\d,.]+)\s+([\d,.]+)/i);
+  const match = cleaned.match(/\b(P\s*\d{3,4}\s*F?)\s+([\d,.]+)\s+([\d,.]+)/i);
 
-  if (!match) return { Material: cleaned };
+  if (!match) return { Material: normalizeMaterialCode(cleaned) };
 
   return {
-    Material: match[1],
+    Material: normalizeMaterialCode(match[1]),
     Thickness: match[2],
     Width: match[3],
   };
