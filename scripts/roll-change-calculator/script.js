@@ -27,7 +27,22 @@ const readOptionalPositiveNumber = (id, label) => {
   return value;
 };
 
+const readIntegerRange = (id, label, min, max) => {
+  const value = readNumber(id, label, { allowZero: min === 0 });
+  if (!Number.isInteger(value) || value < min || value > max) {
+    throw new Error(`${label} muss zwischen ${min} und ${max} liegen.`);
+  }
+  return value;
+};
+
 const pad = (value) => String(value).padStart(2, '0');
+
+const formatDateInput = (date) => {
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  return `${year}-${month}-${day}`;
+};
 
 const formatTime = (date) => {
   return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
@@ -51,19 +66,30 @@ const formatNumber = (value) => {
 const defaultStartTime = () => {
   const now = new Date();
   now.setMilliseconds(0);
-  const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
-  $('startTime').value = local.toISOString().slice(0, 19);
+  $('startDate').value = formatDateInput(now);
+  $('startHour').value = pad(now.getHours());
+  $('startMinute').value = pad(now.getMinutes());
+  $('startSecond').value = pad(now.getSeconds());
 };
 
 defaultStartTime();
 
-const calculateRollChange = () => {
-  const startValue = $('startTime').value;
-  if (!startValue) {
-    throw new Error('Bitte eine Startzeit eingeben.');
+const readStartDate = () => {
+  const dateValue = $('startDate').value;
+  if (!dateValue) {
+    throw new Error('Bitte ein Datum eingeben.');
   }
 
-  const start = new Date(startValue);
+  const hour = readIntegerRange('startHour', 'Stunde', 0, 23);
+  const minute = readIntegerRange('startMinute', 'Minute', 0, 59);
+  const second = readIntegerRange('startSecond', 'Sekunde', 0, 59);
+  const [year, month, day] = dateValue.split('-').map(Number);
+
+  return new Date(year, month - 1, day, hour, minute, second, 0);
+};
+
+const calculateRollChange = () => {
+  const start = readStartDate();
   const speed = readNumber('speed', 'Geschwindigkeit');
   const targetLength = readNumber('targetLength', 'Rollenlänge');
   const warningSeconds = Number(String($('warningSeconds').value || '0').replace(',', '.'));
