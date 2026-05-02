@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Mobiler Rechner für Geschwindigkeit bei gleicher Pumpenleistung." />
+  <meta name="theme-color" content="#22c55e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Speed Rechner" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Geschwindigkeitsrechner</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">ColtigerV2 Script</p>
+      <h1>Geschwindigkeitsrechner</h1>
+      <p>
+        Berechnet die neue Geschwindigkeit, wenn die Pumpen gleich bleiben und nur die Stärke geändert wird.
+      </p>
+    </header>
+
+    <section class="card">
+      <h2>Eingabe</h2>
+      <p class="hint">Bei gleicher Pumpenleistung bleibt der Durchsatz gleich.</p>
+      <div class="grid two">
+        <label>
+          Stärke 1 [µm]
+          <input id="thickness1" inputmode="decimal" />
+        </label>
+        <label>
+          Geschwindigkeit 1 [m/min]
+          <input id="speed1" inputmode="decimal" />
+        </label>
+        <label>
+          Stärke 2 [µm]
+          <input id="thickness2" inputmode="decimal" />
+        </label>
+      </div>
+      <button class="primary" id="calculateButton">Geschwindigkeit berechnen</button>
+    </section>
+
+    <section class="results">
+      <div>
+        <span>Geschwindigkeit 2</span>
+        <strong id="resultSpeed2">-</strong>
+        <small>m/min</small>
+      </div>
+    </section>
+
+    <section class="card formula-card">
+      <h2>Rechenbasis</h2>
+      <p>Geschwindigkeit 2 = Stärke 1 × Geschwindigkeit 1 ÷ Stärke 2</p>
+      <p>Beispiel: Wird die Stärke kleiner, steigt die Geschwindigkeit bei gleicher Pumpenleistung.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
