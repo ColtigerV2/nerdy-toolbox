@@ -1,9 +1,9 @@
-const CACHE_NAME = 'changeover-assistant-v8';
+const CACHE_NAME = 'changeover-assistant-v9';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=3',
-  './script.js?v=3',
+  './style.css?v=4',
+  './script.js?v=4',
   './manifest.json',
   './icons/icon.svg'
 ];
