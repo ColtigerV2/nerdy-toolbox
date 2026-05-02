@@ -20,13 +20,13 @@
       <p class="eyebrow">ColtigerV2 Script</p>
       <h1>Rollenwechsel Rechner</h1>
       <p>
-        Startpunkt, Geschwindigkeit und Soll-Länge eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel fällig ist.
+        Startpunkt, Geschwindigkeit, Rollenlänge und Anzahl der Wechsel eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel und das Auftragsende fällig sind.
       </p>
     </header>
 
     <section class="card">
       <h2>Eingabe</h2>
-      <p class="hint">Die Laufzeit ergibt sich aus Soll-Länge geteilt durch Geschwindigkeit.</p>
+      <p class="hint">Die Laufzeit pro Rolle ergibt sich aus Rollenlänge geteilt durch Geschwindigkeit.</p>
       <div class="grid two">
         <label>
           Startzeit
@@ -42,15 +42,15 @@
         </label>
         <label>
           Vorwarnung [s]
-          <input id="warningSeconds" inputmode="decimal" value="300" />
+          <input id="warningSeconds" inputmode="decimal" value="30" />
         </label>
         <label>
-          Auftragslänge gesamt [m]
-          <input id="orderLength" inputmode="decimal" />
+          Wechsel gesamt [Stück]
+          <input id="orderChanges" inputmode="numeric" />
         </label>
         <label>
-          Bereits gelaufen [m]
-          <input id="currentLength" inputmode="decimal" value="0" />
+          Produzierte Wechsel [Stück]
+          <input id="currentChanges" inputmode="numeric" value="0" />
         </label>
       </div>
       <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
@@ -74,14 +74,14 @@
         <small>Uhr</small>
       </div>
       <div>
+        <span>Restwechsel</span>
+        <strong id="remainingChangesResult">-</strong>
+        <small>Stück</small>
+      </div>
+      <div>
         <span>Restlänge</span>
         <strong id="remainingLengthResult">-</strong>
         <small>m</small>
-      </div>
-      <div>
-        <span>Wechsel bis Ende</span>
-        <strong id="remainingChangesResult">-</strong>
-        <small>Stück</small>
       </div>
       <div>
         <span>Auftragsende</span>
@@ -102,8 +102,8 @@
       <h2>Rechenbasis</h2>
       <p>Laufzeit Rolle = Rollenlänge ÷ Geschwindigkeit</p>
       <p>Nächster Wechsel = Startzeit + Laufzeit Rolle</p>
-      <p>Restlänge = Auftragslänge gesamt - bereits gelaufen</p>
-      <p>Wechsel bis Ende = aufgerundet(Restlänge ÷ Rollenlänge)</p>
+      <p>Restwechsel = Wechsel gesamt - produzierte Wechsel</p>
+      <p>Restlänge = Restwechsel × Rollenlänge</p>
       <p>Auftragsende = Startzeit + (Restlänge ÷ Geschwindigkeit)</p>
       <p>Vorwarnung wird in Sekunden vor dem Rollenwechsel berechnet.</p>
     </section>
