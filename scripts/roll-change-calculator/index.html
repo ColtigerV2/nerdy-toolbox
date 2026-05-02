@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mobiler Rechner für Rollenwechsel-Zeiten." />
+  <meta name="description" content="Mobiler Rechner für automatische Rollenwechsel-Zeiten." />
   <meta name="theme-color" content="#22c55e" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Rollenwechsel" />
@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
   <main class="app-shell">
@@ -20,19 +20,19 @@
       <p class="eyebrow">ColtigerV2 Script</p>
       <h1>Rollenwechsel Rechner</h1>
       <p>
-        Startpunkt, Geschwindigkeit und Rollenlänge eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel fällig ist.
+        Bekannten Wechselzeitpunkt, Geschwindigkeit und Rollenlänge eingeben. Die App findet automatisch den nächsten kommenden Rollenwechsel und läuft danach konstant weiter.
       </p>
     </header>
 
     <section class="card">
       <h2>Eingabe</h2>
-      <p class="hint">Die Laufzeit pro Rolle ergibt sich aus Rollenlänge geteilt durch Geschwindigkeit.</p>
+      <p class="hint">Der Wechselzeitpunkt darf auch in der Vergangenheit liegen. Die App rechnet automatisch in Rollenintervallen weiter.</p>
       <div class="grid two">
         <label class="wide-field">
-          Datum
+          Bekannter Wechselzeitpunkt: Datum
           <input id="startDate" type="date" />
         </label>
-        <div class="time-grid wide-field" aria-label="Startzeit mit Sekunden">
+        <div class="time-grid wide-field" aria-label="Bekannter Wechselzeitpunkt mit Sekunden">
           <label>
             Stunde
             <input id="startHour" type="number" inputmode="numeric" min="0" max="23" />
@@ -55,9 +55,9 @@
           <input id="targetLength" inputmode="decimal" />
         </label>
       </div>
-      <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
+      <button class="primary" id="calculateButton">Automatischen Countdown starten</button>
       <button class="secondary" id="notifyButton">Benachrichtigung aktivieren</button>
-      <button class="secondary complete-button" id="completeChangeButton">Wechsel erledigt / nächste Rolle starten</button>
+      <button class="secondary complete-button" id="completeChangeButton">Wechsel jetzt übernehmen</button>
     </section>
 
     <section class="results">
@@ -82,18 +82,18 @@
       <h2>Status</h2>
       <p id="statusText">Noch keine Berechnung gestartet.</p>
       <p class="hint">
-        Lokale Benachrichtigungen funktionieren am zuverlässigsten, wenn die App geöffnet bleibt oder als PWA gestartet wurde.
+        Sobald ein Wechselzeitpunkt erreicht ist, springt die App automatisch auf den nächsten Wechsel weiter.
       </p>
     </section>
 
     <section class="card formula-card">
       <h2>Rechenbasis</h2>
       <p>Laufzeit Rolle = Rollenlänge ÷ Geschwindigkeit</p>
-      <p>Nächster Wechsel = Startzeit + Laufzeit Rolle</p>
+      <p>Nächster Wechsel = erster Wechselzeitpunkt in der Zukunft auf Basis des bekannten Wechselzeitpunkts</p>
       <p>Benachrichtigung erfolgt direkt zum berechneten Wechselzeitpunkt.</p>
     </section>
   </main>
 
-  <script src="script.js?v=9"></script>
+  <script src="script.js?v=10"></script>
 </body>
 </html>
