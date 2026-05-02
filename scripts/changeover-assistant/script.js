@@ -60,8 +60,8 @@ const fields = [
     label: 'LFM',
     action: 'Laufmeter / Länge prüfen.',
     patterns: [
-      /^\s*EX\s*[- ]?LFM\s+([\d,.]+\s*LFM?)/im,
-      /\bEX\s*[- ]?LFM\s*[:\-]?\s*([\d,.]+\s*LFM?)/i,
+      /^\s*LFM\s+pro\s+Rolle\s+([\d,.]+\s*LFM?)/im,
+      /\bLFM\s+pro\s+Rolle\s*[:\-]?\s*([\d,.]+\s*LFM?)/i,
     ],
   },
   {
@@ -69,8 +69,8 @@ const fields = [
     label: 'KG',
     action: 'Kilogramm / Materialmenge prüfen.',
     patterns: [
-      /^\s*EX\s*[- ]?KG\s+([\d,.]+\s*KG?)/im,
-      /\bEX\s*[- ]?KG\s*[:\-]?\s*([\d,.]+\s*KG?)/i,
+      /^\s*KG\s+pro\s+Rolle\s+([\d,.]+\s*KG?)/im,
+      /\bKG\s+pro\s+Rolle\s*[:\-]?\s*([\d,.]+\s*KG?)/i,
     ],
   },
   {
