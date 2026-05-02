@@ -1,5 +1,7 @@
 const $ = (id) => document.getElementById(id);
 
+let lastPumpCalculation = null;
+
 const fields = [
   {
     key: 'Material',
@@ -75,24 +77,6 @@ const fields = [
       /\bChill\s*[:\-]?\s*([^\n]+)/i,
     ],
   },
-  {
-    key: 'PumpH',
-    label: 'Pumpe H',
-    action: 'Pumpe H prüfen und einstellen.',
-    patterns: [
-      /\bPumpe\s*H\s*[:\-]?\s*([\d,.]+)/i,
-      /\bP\s*H\s*[:\-]?\s*([\d,.]+)/i,
-    ],
-  },
-  {
-    key: 'PumpCo',
-    label: 'Pumpe Co',
-    action: 'Pumpe Co prüfen und einstellen.',
-    patterns: [
-      /\bPumpe\s*Co\s*[:\-]?\s*([\d,.]+)/i,
-      /\bP\s*Co\s*[:\-]?\s*([\d,.]+)/i,
-    ],
-  },
 ];
 
 const normalize = (value) => String(value || '').trim();
@@ -127,6 +111,18 @@ const buildChangeItem = ({ label, oldValue, newValue, action }, index) => {
   return item;
 };
 
+const buildPumpItem = (index) => {
+  const item = document.createElement('div');
+  item.className = 'change-item';
+  item.innerHTML = `
+    <strong>${index}. Pumpen</strong>
+    <span>Pumpe H: ${formatNumber(lastPumpCalculation.oldPumpH)} → ${formatNumber(lastPumpCalculation.newPumpH)}</span>
+    <span>Pumpe Co: ${formatNumber(lastPumpCalculation.oldPumpCo)} → ${formatNumber(lastPumpCalculation.newPumpCo)}</span>
+    <span>Pumpenwerte prüfen und einstellen.</span>
+  `;
+  return item;
+};
+
 const compareOrders = () => {
   const container = $('changeoverList');
   const summary = $('summaryText');
@@ -137,6 +133,10 @@ const compareOrders = () => {
     .filter(({ oldValue, newValue }) => oldValue || newValue)
     .filter(({ oldValue, newValue }) => oldValue !== newValue);
 
+  if (lastPumpCalculation) {
+    changes.push({ isPumpCalculation: true });
+  }
+
   if (changes.length === 0) {
     summary.textContent = 'Keine Unterschiede gefunden oder noch keine Werte eingetragen.';
     container.innerHTML = '<div class="empty-state">Keine Umstellung erkannt.</div>';
@@ -146,7 +146,7 @@ const compareOrders = () => {
   summary.textContent = `${changes.length} Unterschied${changes.length === 1 ? '' : 'e'} gefunden.`;
 
   changes.forEach((change, index) => {
-    container.appendChild(buildChangeItem(change, index + 1));
+    container.appendChild(change.isPumpCalculation ? buildPumpItem(index + 1) : buildChangeItem(change, index + 1));
   });
 };
 
@@ -154,6 +154,9 @@ const clearInputs = () => {
   document.querySelectorAll('input').forEach((input) => {
     if (input.type !== 'file') input.value = '';
   });
+  lastPumpCalculation = null;
+  $('newPumpHResult').textContent = '-';
+  $('newPumpCoResult').textContent = '-';
   $('summaryText').textContent = 'Noch keine Umstellliste erstellt.';
   $('changeoverList').innerHTML = '<div class="empty-state">Fülle alte und neue Werte aus und tippe auf „Umstellliste erstellen“.</div>';
   $('ocrStatus').textContent = 'OCR ist ein Hilfsmittel. Bitte erkannte Werte immer prüfen.';
@@ -270,10 +273,16 @@ const calculatePumps = () => {
     const newPumpH = currentPumpH * ratio;
     const newPumpCo = currentPumpCo * ratio;
 
-    $('oldPumpH').value = formatNumber(currentPumpH);
-    $('oldPumpCo').value = formatNumber(currentPumpCo);
-    $('newPumpH').value = formatNumber(newPumpH);
-    $('newPumpCo').value = formatNumber(newPumpCo);
+    lastPumpCalculation = {
+      oldPumpH: currentPumpH,
+      oldPumpCo: currentPumpCo,
+      newPumpH,
+      newPumpCo,
+      ratio,
+    };
+
+    $('newPumpHResult').textContent = formatNumber(newPumpH);
+    $('newPumpCoResult').textContent = formatNumber(newPumpCo);
     $('pumpStatus').textContent = `Berechnet: Pumpe H ${formatNumber(newPumpH)}, Pumpe Co ${formatNumber(newPumpCo)}. Verhältnis: ${formatNumber(ratio)}.`;
   } catch (error) {
     alert(error.message);
