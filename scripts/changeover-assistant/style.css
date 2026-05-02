@@ -77,32 +77,20 @@ h2 {
   box-shadow: var(--shadow);
 }
 
-.ocr-grid {
+.ocr-grid,
+.pump-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-top: 16px;
 }
 
-.file-label {
+.file-label,
+.pump-grid label {
   display: grid;
   gap: 8px;
   color: var(--text);
   font-weight: 850;
-}
-
-textarea {
-  width: 100%;
-  min-height: 170px;
-  margin-top: 12px;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
-  resize: vertical;
-  outline: none;
-  background: rgba(5, 14, 10, 0.72);
-  color: var(--text);
-  font: inherit;
 }
 
 .comparison-card {
@@ -130,6 +118,12 @@ textarea {
   font-weight: 850;
 }
 
+.bottom-group {
+  margin-top: 14px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
 input {
   width: 100%;
   min-height: 46px;
@@ -142,8 +136,7 @@ input {
   font-size: 1rem;
 }
 
-input:focus,
-textarea:focus {
+input:focus {
   border-color: rgba(34, 197, 94, 0.8);
   box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.11);
 }
@@ -208,7 +201,8 @@ textarea:focus {
 }
 
 @media (max-width: 780px) {
-  .ocr-grid {
+  .ocr-grid,
+  .pump-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -226,6 +220,10 @@ textarea:focus {
 
   .comparison-row:last-child {
     border-bottom: 0;
+  }
+
+  .bottom-group {
+    border-top: 1px solid var(--border);
   }
 }
 
