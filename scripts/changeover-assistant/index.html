@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet" href="style.css?v=6" />
 </head>
 <body>
   <main class="app-shell">
@@ -103,16 +103,6 @@
         <input id="oldChill" />
         <input id="newChill" />
       </div>
-      <div class="comparison-row">
-        <label>Pumpe H</label>
-        <input id="oldPumpH" inputmode="decimal" />
-        <input id="newPumpH" inputmode="decimal" />
-      </div>
-      <div class="comparison-row">
-        <label>Pumpe Co</label>
-        <input id="oldPumpCo" inputmode="decimal" />
-        <input id="newPumpCo" inputmode="decimal" />
-      </div>
     </section>
 
     <section class="card pump-card">
@@ -131,6 +121,10 @@
         </label>
       </div>
       <button class="secondary" id="calculatePumpsButton" type="button">Pumpen berechnen</button>
+      <div class="pump-results">
+        <div><span>Pumpe H neu</span><strong id="newPumpHResult">-</strong><small>rpm</small></div>
+        <div><span>Pumpe Co neu</span><strong id="newPumpCoResult">-</strong><small>rpm</small></div>
+      </div>
       <p class="hint" id="pumpStatus">Formel: neue Pumpe = aktuelle Pumpe × Chill neu ÷ Chill alt.</p>
     </section>
 
@@ -156,6 +150,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>
