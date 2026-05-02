@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Umstelllisten-Assistent für alte und neue Aufträge." />
+  <meta name="theme-color" content="#22c55e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Umstellliste" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Umstelllisten-Assistent</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">ColtigerV2 Script</p>
+      <h1>Umstelllisten-Assistent</h1>
+      <p>
+        Alten und neuen Auftrag vergleichen. Die App erstellt daraus eine einfache Umstellliste.
+      </p>
+    </header>
+
+    <section class="card intro-card">
+      <h2>Erste Version</h2>
+      <p class="hint">
+        Diese Version arbeitet erstmal mit manueller Eingabe. Später kann Foto- und Texterkennung ergänzt werden, um die Felder automatisch vorzubefüllen.
+      </p>
+    </section>
+
+    <section class="form-grid">
+      <section class="card">
+        <h2>Alter Auftrag</h2>
+        <div class="grid two">
+          <label>Auftragsnummer<input id="oldOrder" /></label>
+          <label>Artikel<input id="oldArticle" /></label>
+          <label>Material<input id="oldMaterial" /></label>
+          <label>Farbe<input id="oldColor" /></label>
+          <label>Stärke [µm]<input id="oldThickness" inputmode="decimal" /></label>
+          <label>Breite [mm]<input id="oldWidth" inputmode="decimal" /></label>
+          <label>Rollenlänge [m]<input id="oldRollLength" inputmode="decimal" /></label>
+          <label>Geschwindigkeit [m/min]<input id="oldSpeed" inputmode="decimal" /></label>
+          <label>Pumpe 1 [rpm]<input id="oldPump1" inputmode="decimal" /></label>
+          <label>Pumpe 2 [rpm]<input id="oldPump2" inputmode="decimal" /></label>
+          <label>Korona / Behandlung<input id="oldTreatment" /></label>
+          <label>Verpackung<input id="oldPackaging" /></label>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Neuer Auftrag</h2>
+        <div class="grid two">
+          <label>Auftragsnummer<input id="newOrder" /></label>
+          <label>Artikel<input id="newArticle" /></label>
+          <label>Material<input id="newMaterial" /></label>
+          <label>Farbe<input id="newColor" /></label>
+          <label>Stärke [µm]<input id="newThickness" inputmode="decimal" /></label>
+          <label>Breite [mm]<input id="newWidth" inputmode="decimal" /></label>
+          <label>Rollenlänge [m]<input id="newRollLength" inputmode="decimal" /></label>
+          <label>Geschwindigkeit [m/min]<input id="newSpeed" inputmode="decimal" /></label>
+          <label>Pumpe 1 [rpm]<input id="newPump1" inputmode="decimal" /></label>
+          <label>Pumpe 2 [rpm]<input id="newPump2" inputmode="decimal" /></label>
+          <label>Korona / Behandlung<input id="newTreatment" /></label>
+          <label>Verpackung<input id="newPackaging" /></label>
+        </div>
+      </section>
+    </section>
+
+    <section class="card actions-card">
+      <button class="primary" id="compareButton">Umstellliste erstellen</button>
+      <button class="secondary" id="clearButton">Eingaben löschen</button>
+    </section>
+
+    <section class="card result-card">
+      <h2>Umstellliste</h2>
+      <p class="hint" id="summaryText">Noch keine Umstellliste erstellt.</p>
+      <div id="changeoverList" class="changeover-list">
+        <div class="empty-state">Fülle alten und neuen Auftrag aus und tippe auf „Umstellliste erstellen“.</div>
+      </div>
+    </section>
+
+    <section class="card formula-card">
+      <h2>Hinweis</h2>
+      <p>
+        Die Liste ist ein Arbeitshelfer. Werte bitte vor der Umstellung immer gegen Auftrag, Maschine und Freigabe prüfen.
+      </p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
