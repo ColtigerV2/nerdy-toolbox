@@ -124,7 +124,8 @@ input:focus {
 }
 
 .primary,
-.secondary {
+.secondary,
+.time-button {
   width: 100%;
   min-height: 52px;
   margin-top: 16px;
@@ -141,10 +142,16 @@ input:focus {
   color: #04110a;
 }
 
-.secondary {
+.secondary,
+.time-button {
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.055);
   color: var(--text);
+}
+
+.time-button {
+  margin: 12px 0 0;
+  color: #bbf7d0;
 }
 
 .results {
