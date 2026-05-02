@@ -1,18 +1,17 @@
 const $ = (id) => document.getElementById(id);
 
 const fields = [
-  { key: 'Order', label: 'Auftragsnummer', action: 'Auftragspapiere und Etiketten auf neuen Auftrag umstellen.' },
-  { key: 'Article', label: 'Artikel', action: 'Artikelwechsel prüfen und Muster/Freigabe einplanen.' },
-  { key: 'Material', label: 'Material', action: 'Materialwechsel vorbereiten und Materialversorgung prüfen.' },
-  { key: 'Color', label: 'Farbe', action: 'Farb-/Sortenwechsel prüfen und Verunreinigungen ausschließen.' },
-  { key: 'Thickness', label: 'Stärke [µm]', action: 'Stärke umstellen und Messung/Freigabe durchführen.' },
-  { key: 'Width', label: 'Breite [mm]', action: 'Breite einstellen, Messer/Format und Randbeschnitt prüfen.' },
-  { key: 'RollLength', label: 'Rollenlänge [m]', action: 'Rollenlänge im Wickler/Auftrag prüfen.' },
-  { key: 'Speed', label: 'Geschwindigkeit [m/min]', action: 'Liniengeschwindigkeit anpassen und Prozess stabilisieren.' },
-  { key: 'Pump1', label: 'Pumpe 1 [rpm]', action: 'Pumpe 1 einstellen oder neu berechnen.' },
-  { key: 'Pump2', label: 'Pumpe 2 [rpm]', action: 'Pumpe 2 einstellen oder neu berechnen.' },
-  { key: 'Treatment', label: 'Korona / Behandlung', action: 'Behandlung/Korona prüfen und einstellen.' },
-  { key: 'Packaging', label: 'Verpackung', action: 'Verpackung, Etiketten und Palettierung auf neuen Auftrag umstellen.' },
+  { key: 'Material', label: 'Material', action: 'Material prüfen und bei Bedarf wechseln.' },
+  { key: 'Thickness', label: 'Stärke', action: 'Stärke umstellen und Messung/Freigabe durchführen.' },
+  { key: 'Width', label: 'Breite', action: 'Breite einstellen und Randbeschnitt prüfen.' },
+  { key: 'Chill', label: 'Chill', action: 'Chill-Werte prüfen und einstellen.' },
+  { key: 'PumpH', label: 'Pumpe H', action: 'Pumpe H prüfen und einstellen.' },
+  { key: 'PumpCo', label: 'Pumpe Co', action: 'Pumpe Co prüfen und einstellen.' },
+  { key: 'Lfm', label: 'LFM', action: 'Laufmeter / Länge prüfen.' },
+  { key: 'Kg', label: 'KG', action: 'Kilogramm / Materialmenge prüfen.' },
+  { key: 'Additive', label: 'Additiv', action: 'Additiv prüfen und Dosierung einstellen.' },
+  { key: 'Powder', label: 'Puder', action: 'Puder prüfen und Einstellung anpassen.' },
+  { key: 'Coating', label: 'Coating', action: 'Coating prüfen und Einstellung anpassen.' },
 ];
 
 const normalize = (value) => String(value || '').trim();
@@ -34,22 +33,6 @@ const buildChangeItem = ({ label, oldValue, newValue, action }, index) => {
   return item;
 };
 
-const addFixedChecklist = (container, startIndex) => {
-  const fixedItems = [
-    'Auftragsdaten gegen Auftragspapiere prüfen.',
-    'Maschineneinstellungen vor Produktionsstart kontrollieren.',
-    'Erstmuster ziehen und Qualität freigeben lassen.',
-    'Dokumentation / Etiketten / Verpackung prüfen.',
-  ];
-
-  fixedItems.forEach((text, offset) => {
-    const item = document.createElement('div');
-    item.className = 'change-item warning';
-    item.innerHTML = `<strong>${startIndex + offset}. Standardprüfung</strong><span>${text}</span>`;
-    container.appendChild(item);
-  });
-};
-
 const compareOrders = () => {
   const container = $('changeoverList');
   const summary = $('summaryText');
@@ -66,13 +49,11 @@ const compareOrders = () => {
     return;
   }
 
-  summary.textContent = `${changes.length} Unterschied${changes.length === 1 ? '' : 'e'} gefunden. Daraus wurde eine Umstellliste erstellt.`;
+  summary.textContent = `${changes.length} Unterschied${changes.length === 1 ? '' : 'e'} gefunden.`;
 
   changes.forEach((change, index) => {
     container.appendChild(buildChangeItem(change, index + 1));
   });
-
-  addFixedChecklist(container, changes.length + 1);
 };
 
 const clearInputs = () => {
@@ -80,7 +61,7 @@ const clearInputs = () => {
     input.value = '';
   });
   $('summaryText').textContent = 'Noch keine Umstellliste erstellt.';
-  $('changeoverList').innerHTML = '<div class="empty-state">Fülle alten und neuen Auftrag aus und tippe auf „Umstellliste erstellen“.</div>';
+  $('changeoverList').innerHTML = '<div class="empty-state">Fülle alte und neue Werte aus und tippe auf „Umstellliste erstellen“.</div>';
 };
 
 $('compareButton').addEventListener('click', compareOrders);
