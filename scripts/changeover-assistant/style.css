@@ -78,7 +78,8 @@ h2 {
 }
 
 .ocr-grid,
-.pump-grid {
+.pump-grid,
+.pump-results {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -91,6 +92,28 @@ h2 {
   gap: 8px;
   color: var(--text);
   font-weight: 850;
+}
+
+.pump-results div {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(5, 14, 10, 0.56);
+}
+
+.pump-results span,
+.pump-results small {
+  display: block;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.pump-results strong {
+  display: block;
+  margin: 5px 0;
+  color: #bbf7d0;
+  font-size: clamp(1.8rem, 7vw, 3rem);
+  line-height: 1;
 }
 
 .comparison-card {
@@ -202,7 +225,8 @@ input:focus {
 
 @media (max-width: 780px) {
   .ocr-grid,
-  .pump-grid {
+  .pump-grid,
+  .pump-results {
     grid-template-columns: 1fr;
   }
 }
