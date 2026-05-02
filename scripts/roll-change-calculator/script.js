@@ -78,8 +78,9 @@ const defaultStartTime = () => {
 defaultStartTime();
 
 $('useNowButton').addEventListener('click', () => {
-  fillStartTime(new Date());
-  $('statusText').textContent = `Aktuelle Zeit übernommen: ${formatTime(new Date())} Uhr.`;
+  const now = new Date();
+  fillStartTime(now);
+  $('statusText').textContent = `Aktuelle Zeit übernommen: ${formatTime(now)} Uhr.`;
 });
 
 const readStartDate = () => {
@@ -94,6 +95,32 @@ const readStartDate = () => {
   const [year, month, day] = dateValue.split('-').map(Number);
 
   return new Date(year, month - 1, day, hour, minute, second, 0);
+};
+
+const renderSchedule = ({ start, durationSeconds, warningSeconds, remainingChanges }) => {
+  const body = $('scheduleBody');
+  body.innerHTML = '';
+
+  if (remainingChanges === null || remainingChanges <= 0) {
+    body.innerHTML = '<tr><td colspan="3">Keine weiteren Wechsel berechnet.</td></tr>';
+    return;
+  }
+
+  const visibleRows = Math.min(remainingChanges, 50);
+
+  for (let index = 1; index <= visibleRows; index += 1) {
+    const changeTime = new Date(start.getTime() + durationSeconds * 1000 * index);
+    const warningTime = new Date(changeTime.getTime() - warningSeconds * 1000);
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${index}</td><td>${formatTime(changeTime)}</td><td>${formatTime(warningTime)}</td>`;
+    body.appendChild(row);
+  }
+
+  if (remainingChanges > visibleRows) {
+    const row = document.createElement('tr');
+    row.innerHTML = `<td colspan="3">Weitere ${remainingChanges - visibleRows} Wechsel nicht angezeigt.</td>`;
+    body.appendChild(row);
+  }
 };
 
 const calculateRollChange = () => {
@@ -149,6 +176,8 @@ const calculateRollChange = () => {
   $('remainingChangesResult').textContent = remainingChanges === null ? '-' : String(remainingChanges);
   $('orderEndResult').textContent = orderEndTime === null ? '-' : formatTime(orderEndTime);
 
+  renderSchedule(lastCalculation);
+
   const orderText = orderEndTime === null
     ? ''
     : ` Auftragsende um ${formatTime(orderEndTime)} Uhr, noch ${remainingChanges} Wechsel.`;
@@ -161,6 +190,26 @@ const calculateRollChange = () => {
 $('calculateButton').addEventListener('click', () => {
   try {
     calculateRollChange();
+  } catch (error) {
+    alert(error.message);
+  }
+});
+
+$('completeChangeButton').addEventListener('click', () => {
+  try {
+    const nextProduced = readNumber('currentChanges', 'Produzierte Wechsel', { allowZero: true }) + 1;
+    const orderChanges = readOptionalPositiveNumber('orderChanges', 'Wechsel gesamt');
+
+    if (orderChanges !== null && nextProduced > orderChanges) {
+      throw new Error('Alle Wechsel sind bereits erledigt.');
+    }
+
+    $('currentChanges').value = String(nextProduced);
+    const now = new Date();
+    fillStartTime(now);
+    const calculation = calculateRollChange();
+    clearReminders();
+    $('statusText').textContent = `Wechsel erledigt um ${formatTime(now)} Uhr. Nächster Wechsel: ${formatTime(calculation.changeTime)} Uhr.`;
   } catch (error) {
     alert(error.message);
   }
