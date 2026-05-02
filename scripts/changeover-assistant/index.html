@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 <body>
   <main class="app-shell">
@@ -29,6 +29,32 @@
       <p class="hint">
         Die Felder entsprechen deiner aktuellen Papierliste. Nur geänderte Werte werden in die Umstellliste übernommen.
       </p>
+    </section>
+
+    <section class="card ocr-card">
+      <h2>Foto / OCR</h2>
+      <p class="hint">Erste OCR-Version: Foto aufnehmen oder hochladen, Text erkennen lassen, Werte kontrollieren und danach die Umstellliste erstellen.</p>
+      <div class="ocr-grid">
+        <div>
+          <label class="file-label">
+            Alter Auftrag Foto
+            <input id="oldImage" type="file" accept="image/*" capture="environment" />
+          </label>
+          <button class="secondary" id="oldOcrButton" type="button">Alt erkennen</button>
+          <textarea id="oldOcrText" placeholder="Erkannter Text alter Auftrag"></textarea>
+          <button class="secondary" id="oldApplyOcrButton" type="button">Alt-Werte übernehmen</button>
+        </div>
+        <div>
+          <label class="file-label">
+            Neuer Auftrag Foto
+            <input id="newImage" type="file" accept="image/*" capture="environment" />
+          </label>
+          <button class="secondary" id="newOcrButton" type="button">Neu erkennen</button>
+          <textarea id="newOcrText" placeholder="Erkannter Text neuer Auftrag"></textarea>
+          <button class="secondary" id="newApplyOcrButton" type="button">Neu-Werte übernehmen</button>
+        </div>
+      </div>
+      <p class="hint" id="ocrStatus">OCR ist ein Hilfsmittel. Bitte erkannte Werte immer prüfen.</p>
     </section>
 
     <section class="card comparison-card">
@@ -116,6 +142,7 @@
     </section>
   </main>
 
-  <script src="script.js?v=2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>
