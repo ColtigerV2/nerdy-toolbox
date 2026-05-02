@@ -20,35 +20,6 @@ const fields = [
     patterns: [],
   },
   {
-    key: 'Chill',
-    label: 'Chill',
-    action: 'Chill-Wert prüfen und einstellen.',
-    patterns: [
-      /^\s*Abzug\s+([\d,.]+\s*(?:m\/min)?)/im,
-      /\bAbzug\s*[:\-]?\s*([\d,.]+\s*(?:m\/min)?)/i,
-      /^\s*Chill\s+([^\n]+)/im,
-      /\bChill\s*[:\-]?\s*([^\n]+)/i,
-    ],
-  },
-  {
-    key: 'PumpH',
-    label: 'Pumpe H',
-    action: 'Pumpe H prüfen und einstellen.',
-    patterns: [
-      /\bPumpe\s*H\s*[:\-]?\s*([\d,.]+)/i,
-      /\bP\s*H\s*[:\-]?\s*([\d,.]+)/i,
-    ],
-  },
-  {
-    key: 'PumpCo',
-    label: 'Pumpe Co',
-    action: 'Pumpe Co prüfen und einstellen.',
-    patterns: [
-      /\bPumpe\s*Co\s*[:\-]?\s*([\d,.]+)/i,
-      /\bP\s*Co\s*[:\-]?\s*([\d,.]+)/i,
-    ],
-  },
-  {
     key: 'Lfm',
     label: 'LFM',
     action: 'Laufmeter / Länge prüfen.',
@@ -93,6 +64,35 @@ const fields = [
       /\bCoating\s*[:\-]?\s*([^\n]+)/i,
     ],
   },
+  {
+    key: 'Chill',
+    label: 'Chill',
+    action: 'Chill-Wert prüfen und einstellen.',
+    patterns: [
+      /^\s*Abzug\s+([\d,.]+\s*(?:m\/min)?)/im,
+      /\bAbzug\s*[:\-]?\s*([\d,.]+\s*(?:m\/min)?)/i,
+      /^\s*Chill\s+([^\n]+)/im,
+      /\bChill\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
+  {
+    key: 'PumpH',
+    label: 'Pumpe H',
+    action: 'Pumpe H prüfen und einstellen.',
+    patterns: [
+      /\bPumpe\s*H\s*[:\-]?\s*([\d,.]+)/i,
+      /\bP\s*H\s*[:\-]?\s*([\d,.]+)/i,
+    ],
+  },
+  {
+    key: 'PumpCo',
+    label: 'Pumpe Co',
+    action: 'Pumpe Co prüfen und einstellen.',
+    patterns: [
+      /\bPumpe\s*Co\s*[:\-]?\s*([\d,.]+)/i,
+      /\bP\s*Co\s*[:\-]?\s*([\d,.]+)/i,
+    ],
+  },
 ];
 
 const normalize = (value) => String(value || '').trim();
@@ -102,6 +102,19 @@ const readPair = (key) => {
   const newValue = normalize($(`new${key}`).value);
   return { oldValue, newValue };
 };
+
+const readNumberInput = (id, label) => {
+  const value = Number(normalize($(id).value).replace(',', '.').replace(/[^\d.-]/g, ''));
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`${label} muss größer als null sein.`);
+  }
+  return value;
+};
+
+const formatNumber = (value) => value.toLocaleString('de-DE', {
+  maximumFractionDigits: 1,
+  minimumFractionDigits: 1,
+});
 
 const buildChangeItem = ({ label, oldValue, newValue, action }, index) => {
   const item = document.createElement('div');
@@ -144,6 +157,7 @@ const clearInputs = () => {
   $('summaryText').textContent = 'Noch keine Umstellliste erstellt.';
   $('changeoverList').innerHTML = '<div class="empty-state">Fülle alte und neue Werte aus und tippe auf „Umstellliste erstellen“.</div>';
   $('ocrStatus').textContent = 'OCR ist ein Hilfsmittel. Bitte erkannte Werte immer prüfen.';
+  $('pumpStatus').textContent = 'Formel: neue Pumpe = aktuelle Pumpe × Chill neu ÷ Chill alt.';
 };
 
 const setOcrStatus = (message) => {
@@ -246,8 +260,29 @@ const runOcrAndApply = async (side) => {
   }
 };
 
+const calculatePumps = () => {
+  try {
+    const oldChill = readNumberInput('oldChill', 'Chill alt');
+    const newChill = readNumberInput('newChill', 'Chill neu');
+    const currentPumpH = readNumberInput('currentPumpH', 'Aktuelle Pumpe H');
+    const currentPumpCo = readNumberInput('currentPumpCo', 'Aktuelle Pumpe Co');
+    const ratio = newChill / oldChill;
+    const newPumpH = currentPumpH * ratio;
+    const newPumpCo = currentPumpCo * ratio;
+
+    $('oldPumpH').value = formatNumber(currentPumpH);
+    $('oldPumpCo').value = formatNumber(currentPumpCo);
+    $('newPumpH').value = formatNumber(newPumpH);
+    $('newPumpCo').value = formatNumber(newPumpCo);
+    $('pumpStatus').textContent = `Berechnet: Pumpe H ${formatNumber(newPumpH)}, Pumpe Co ${formatNumber(newPumpCo)}. Verhältnis: ${formatNumber(ratio)}.`;
+  } catch (error) {
+    alert(error.message);
+  }
+};
+
 $('compareButton').addEventListener('click', compareOrders);
 $('clearButton').addEventListener('click', clearInputs);
+$('calculatePumpsButton').addEventListener('click', calculatePumps);
 $('oldImage').addEventListener('change', () => runOcrAndApply('old'));
 $('newImage').addEventListener('change', () => runOcrAndApply('new'));
 
