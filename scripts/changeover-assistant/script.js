@@ -1,17 +1,105 @@
 const $ = (id) => document.getElementById(id);
 
 const fields = [
-  { key: 'Material', label: 'Material', action: 'Material prüfen und bei Bedarf wechseln.', patterns: [/material\s*[:\-]?\s*([^\n]+)/i] },
-  { key: 'Thickness', label: 'Stärke', action: 'Stärke umstellen und Messung/Freigabe durchführen.', patterns: [/st[äa]rke\s*[:\-]?\s*([\d,.]+)/i, /dicke\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'Width', label: 'Breite', action: 'Breite einstellen und Randbeschnitt prüfen.', patterns: [/breite\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'Chill', label: 'Chill', action: 'Chill-Werte prüfen und einstellen.', patterns: [/chill\s*[:\-]?\s*([^\n]+)/i] },
-  { key: 'PumpH', label: 'Pumpe H', action: 'Pumpe H prüfen und einstellen.', patterns: [/pumpe\s*h\s*[:\-]?\s*([\d,.]+)/i, /p\s*h\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'PumpCo', label: 'Pumpe Co', action: 'Pumpe Co prüfen und einstellen.', patterns: [/pumpe\s*co\s*[:\-]?\s*([\d,.]+)/i, /p\s*co\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'Lfm', label: 'LFM', action: 'Laufmeter / Länge prüfen.', patterns: [/lfm\s*[:\-]?\s*([\d,.]+)/i, /laufmeter\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'Kg', label: 'KG', action: 'Kilogramm / Materialmenge prüfen.', patterns: [/kg\s*[:\-]?\s*([\d,.]+)/i] },
-  { key: 'Additive', label: 'Additiv', action: 'Additiv prüfen und Dosierung einstellen.', patterns: [/additiv\s*[:\-]?\s*([^\n]+)/i] },
-  { key: 'Powder', label: 'Puder', action: 'Puder prüfen und Einstellung anpassen.', patterns: [/puder\s*[:\-]?\s*([^\n]+)/i] },
-  { key: 'Coating', label: 'Coating', action: 'Coating prüfen und Einstellung anpassen.', patterns: [/coating\s*[:\-]?\s*([^\n]+)/i] },
+  {
+    key: 'Material',
+    label: 'Material',
+    action: 'Material prüfen und bei Bedarf wechseln.',
+    patterns: [
+      /^\s*Material\s+([^\n]+)/im,
+      /\bMaterial\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
+  {
+    key: 'Thickness',
+    label: 'Stärke',
+    action: 'Stärke umstellen und Messung/Freigabe durchführen.',
+    patterns: [
+      /^\s*St[äa]rke\s+([\d,.]+\s*µ?)/im,
+      /\bSt[äa]rke\s*[:\-]?\s*([\d,.]+\s*µ?)/i,
+    ],
+  },
+  {
+    key: 'Width',
+    label: 'Breite',
+    action: 'Breite einstellen und Randbeschnitt prüfen.',
+    patterns: [
+      /^\s*Breite\s+([\d,.]+\s*(?:mm)?)/im,
+      /\bBreite\s*[:\-]?\s*([\d,.]+\s*(?:mm)?)/i,
+    ],
+  },
+  {
+    key: 'Chill',
+    label: 'Chill',
+    action: 'Chill-Werte prüfen und einstellen.',
+    patterns: [
+      /^\s*Chill\s+([^\n]+)/im,
+      /\bChill\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
+  {
+    key: 'PumpH',
+    label: 'Pumpe H',
+    action: 'Pumpe H prüfen und einstellen.',
+    patterns: [
+      /\bPumpe\s*H\s*[:\-]?\s*([\d,.]+)/i,
+      /\bP\s*H\s*[:\-]?\s*([\d,.]+)/i,
+    ],
+  },
+  {
+    key: 'PumpCo',
+    label: 'Pumpe Co',
+    action: 'Pumpe Co prüfen und einstellen.',
+    patterns: [
+      /\bPumpe\s*Co\s*[:\-]?\s*([\d,.]+)/i,
+      /\bP\s*Co\s*[:\-]?\s*([\d,.]+)/i,
+    ],
+  },
+  {
+    key: 'Lfm',
+    label: 'LFM',
+    action: 'Laufmeter / Länge prüfen.',
+    patterns: [
+      /^\s*EX\s*[- ]?LFM\s+([\d,.]+\s*LFM?)/im,
+      /\bEX\s*[- ]?LFM\s*[:\-]?\s*([\d,.]+\s*LFM?)/i,
+    ],
+  },
+  {
+    key: 'Kg',
+    label: 'KG',
+    action: 'Kilogramm / Materialmenge prüfen.',
+    patterns: [
+      /^\s*EX\s*[- ]?KG\s+([\d,.]+\s*KG?)/im,
+      /\bEX\s*[- ]?KG\s*[:\-]?\s*([\d,.]+\s*KG?)/i,
+    ],
+  },
+  {
+    key: 'Additive',
+    label: 'Additiv',
+    action: 'Additiv prüfen und Dosierung einstellen.',
+    patterns: [
+      /^\s*Additiv\s+([^\n]+)/im,
+      /\bAdditiv\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
+  {
+    key: 'Powder',
+    label: 'Puder',
+    action: 'Puder prüfen und Einstellung anpassen.',
+    patterns: [
+      /^\s*Puder\s+([^\n]+)/im,
+      /\bPuder\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
+  {
+    key: 'Coating',
+    label: 'Coating',
+    action: 'Coating prüfen und Einstellung anpassen.',
+    patterns: [
+      /^\s*Coating\s+([^\n]+)/im,
+      /\bCoating\s*[:\-]?\s*([^\n]+)/i,
+    ],
+  },
 ];
 
 const normalize = (value) => String(value || '').trim();
@@ -107,6 +195,7 @@ const runOcr = async (side) => {
 const cleanExtractedValue = (value) => normalize(value)
   .replace(/\s+/g, ' ')
   .replace(/[;|]+$/g, '')
+  .replace(/^(Food|Qualit[äa]t)\s+/i, '')
   .trim();
 
 const extractValues = (text) => {
