@@ -1,4 +1,4 @@
-const CACHE_NAME = 'changeover-assistant-v6';
+const CACHE_NAME = 'changeover-assistant-v7';
 const ASSETS = [
   './',
   './index.html',
