@@ -1,6 +1,7 @@
 const $ = (id) => document.getElementById(id);
 
 let reminderTimers = [];
+let countdownTimer = null;
 let lastCalculation = null;
 
 const readNumber = (id, label, options = {}) => {
@@ -37,7 +38,7 @@ const formatTime = (date) => {
 };
 
 const formatDuration = (seconds) => {
-  const totalSeconds = Math.round(seconds);
+  const totalSeconds = Math.max(0, Math.round(seconds));
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const restSeconds = totalSeconds % 60;
@@ -68,34 +69,46 @@ const readStartDate = () => {
   return new Date(year, month - 1, day, hour, minute, second, 0);
 };
 
+const updateCountdown = () => {
+  if (!lastCalculation) {
+    $('countdownResult').textContent = '-';
+    return;
+  }
+
+  const remainingSeconds = (lastCalculation.changeTime.getTime() - Date.now()) / 1000;
+  $('countdownResult').textContent = formatDuration(remainingSeconds);
+
+  if (remainingSeconds <= 0) {
+    $('statusText').textContent = `Rollenwechsel fällig seit ${formatTime(lastCalculation.changeTime)} Uhr.`;
+  }
+};
+
+const startCountdown = () => {
+  if (countdownTimer) clearInterval(countdownTimer);
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+};
+
 const calculateRollChange = () => {
   const start = readStartDate();
   const speed = readNumber('speed', 'Geschwindigkeit');
   const targetLength = readNumber('targetLength', 'Rollenlänge');
-  const warningSeconds = Number(String($('warningSeconds').value || '0').replace(',', '.'));
-
-  if (!Number.isFinite(warningSeconds) || warningSeconds < 0) {
-    throw new Error('Vorwarnung darf nicht negativ sein.');
-  }
 
   const durationSeconds = (targetLength / speed) * 60;
   const changeTime = new Date(start.getTime() + durationSeconds * 1000);
-  const warningTime = new Date(changeTime.getTime() - warningSeconds * 1000);
 
   lastCalculation = {
     start,
     speed,
     targetLength,
-    warningSeconds,
     durationSeconds,
     changeTime,
-    warningTime,
   };
 
   $('durationResult').textContent = formatDuration(durationSeconds);
-  $('warningResult').textContent = formatTime(warningTime);
   $('changeResult').textContent = formatTime(changeTime);
   $('statusText').textContent = `Berechnet: nächster Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
+  startCountdown();
 
   return lastCalculation;
 };
@@ -149,25 +162,17 @@ const scheduleReminder = async () => {
 
     clearReminders();
 
-    const now = Date.now();
-    const warningDelay = calculation.warningTime.getTime() - now;
-    const changeDelay = calculation.changeTime.getTime() - now;
+    const changeDelay = calculation.changeTime.getTime() - Date.now();
 
     if (changeDelay <= 0) {
       throw new Error('Die berechnete Wechselzeit liegt bereits in der Vergangenheit.');
-    }
-
-    if (warningDelay > 0 && calculation.warningSeconds > 0) {
-      reminderTimers.push(setTimeout(() => {
-        notify('Rollenwechsel bald fällig', `Noch ca. ${Math.round(calculation.warningSeconds)} Sekunden bis zum Rollenwechsel um ${formatTime(calculation.changeTime)} Uhr.`);
-      }, warningDelay));
     }
 
     reminderTimers.push(setTimeout(() => {
       notify('Rollenwechsel fällig', `Soll-Länge erreicht. Wechselzeit: ${formatTime(calculation.changeTime)} Uhr.`);
     }, changeDelay));
 
-    $('statusText').textContent = `Benachrichtigung aktiv: Vorwarnung ${formatTime(calculation.warningTime)} Uhr, Wechsel ${formatTime(calculation.changeTime)} Uhr.`;
+    $('statusText').textContent = `Benachrichtigung aktiv: Wechsel ${formatTime(calculation.changeTime)} Uhr.`;
   } catch (error) {
     alert(error.message);
   }
