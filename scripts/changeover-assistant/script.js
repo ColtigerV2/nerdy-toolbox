@@ -141,9 +141,6 @@ const clearInputs = () => {
   document.querySelectorAll('input').forEach((input) => {
     if (input.type !== 'file') input.value = '';
   });
-  document.querySelectorAll('textarea').forEach((textarea) => {
-    textarea.value = '';
-  });
   $('summaryText').textContent = 'Noch keine Umstellliste erstellt.';
   $('changeoverList').innerHTML = '<div class="empty-state">Fülle alte und neue Werte aus und tippe auf „Umstellliste erstellen“.</div>';
   $('ocrStatus').textContent = 'OCR ist ein Hilfsmittel. Bitte erkannte Werte immer prüfen.';
@@ -151,38 +148,6 @@ const clearInputs = () => {
 
 const setOcrStatus = (message) => {
   $('ocrStatus').textContent = message;
-};
-
-const runOcr = async (side) => {
-  const imageInput = $(`${side}Image`);
-  const output = $(`${side}OcrText`);
-  const file = imageInput.files && imageInput.files[0];
-
-  if (!file) {
-    alert('Bitte zuerst ein Foto auswählen.');
-    return;
-  }
-
-  if (!window.Tesseract) {
-    alert('OCR-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.');
-    return;
-  }
-
-  try {
-    setOcrStatus('OCR läuft... Das kann auf dem Handy etwas dauern.');
-    const result = await Tesseract.recognize(file, 'deu+eng', {
-      logger: (progress) => {
-        if (progress.status === 'recognizing text') {
-          setOcrStatus(`OCR läuft... ${Math.round(progress.progress * 100)} %`);
-        }
-      },
-    });
-    output.value = result.data.text.trim();
-    setOcrStatus('OCR fertig. Bitte Text und übernommene Werte kontrollieren.');
-  } catch (error) {
-    console.error(error);
-    setOcrStatus('OCR fehlgeschlagen. Foto bitte erneut versuchen oder Werte manuell eintragen.');
-  }
 };
 
 const cleanExtractedValue = (value) => normalize(value)
@@ -232,9 +197,7 @@ const extractValues = (text) => {
   return values;
 };
 
-const applyOcrValues = (side) => {
-  const text = $(`${side}OcrText`).value;
-  const values = extractValues(text);
+const applyValues = (side, values) => {
   const prefix = side === 'old' ? 'old' : 'new';
   let applied = 0;
 
@@ -246,17 +209,47 @@ const applyOcrValues = (side) => {
     }
   });
 
-  setOcrStatus(applied > 0
-    ? `${applied} Wert${applied === 1 ? '' : 'e'} übernommen. Bitte kontrollieren.`
-    : 'Keine passenden Werte erkannt. Du kannst den Text manuell kopieren oder die Felder direkt ausfüllen.');
+  return applied;
+};
+
+const runOcrAndApply = async (side) => {
+  const imageInput = $(`${side}Image`);
+  const file = imageInput.files && imageInput.files[0];
+  const label = side === 'old' ? 'Alt' : 'Neu';
+
+  if (!file) return;
+
+  if (!window.Tesseract) {
+    alert('OCR-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.');
+    return;
+  }
+
+  try {
+    setOcrStatus(`${label}-OCR läuft... Das kann auf dem Handy etwas dauern.`);
+    const result = await Tesseract.recognize(file, 'deu+eng', {
+      logger: (progress) => {
+        if (progress.status === 'recognizing text') {
+          setOcrStatus(`${label}-OCR läuft... ${Math.round(progress.progress * 100)} %`);
+        }
+      },
+    });
+
+    const values = extractValues(result.data.text || '');
+    const applied = applyValues(side, values);
+
+    setOcrStatus(applied > 0
+      ? `${label}: ${applied} Wert${applied === 1 ? '' : 'e'} automatisch übernommen. Bitte kontrollieren.`
+      : `${label}: Keine passenden Werte erkannt. Bitte Werte manuell ergänzen.`);
+  } catch (error) {
+    console.error(error);
+    setOcrStatus(`${label}-OCR fehlgeschlagen. Foto bitte erneut versuchen oder manuell eintragen.`);
+  }
 };
 
 $('compareButton').addEventListener('click', compareOrders);
 $('clearButton').addEventListener('click', clearInputs);
-$('oldOcrButton').addEventListener('click', () => runOcr('old'));
-$('newOcrButton').addEventListener('click', () => runOcr('new'));
-$('oldApplyOcrButton').addEventListener('click', () => applyOcrValues('old'));
-$('newApplyOcrButton').addEventListener('click', () => applyOcrValues('new'));
+$('oldImage').addEventListener('change', () => runOcrAndApply('old'));
+$('newImage').addEventListener('change', () => runOcrAndApply('new'));
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
