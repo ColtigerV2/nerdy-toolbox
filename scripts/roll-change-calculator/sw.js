@@ -1,9 +1,9 @@
-const CACHE_NAME = 'roll-change-calculator-v8';
+const CACHE_NAME = 'roll-change-calculator-v9';
 const ASSETS = [
   './',
   './index.html',
-  './style.css',
-  './script.js',
+  './style.css?v=9',
+  './script.js?v=9',
   './manifest.json',
   './icons/icon.svg'
 ];
@@ -28,7 +28,7 @@ self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request, { cache: 'no-store' })
       .then((response) => {
         const responseClone = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseClone));
