@@ -1,4 +1,4 @@
-const CACHE_NAME = 'roll-change-calculator-v2';
+const CACHE_NAME = 'roll-change-calculator-v3';
 const ASSETS = [
   './',
   './index.html',
