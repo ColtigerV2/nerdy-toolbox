@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=2" />
 </head>
 <body>
   <main class="app-shell">
@@ -20,53 +20,79 @@
       <p class="eyebrow">ColtigerV2 Script</p>
       <h1>Umstelllisten-Assistent</h1>
       <p>
-        Alten und neuen Auftrag vergleichen. Die App erstellt daraus eine einfache Umstellliste.
+        Alte und neue Maschinenwerte vergleichen. Die App erstellt daraus eine kurze Umstellliste.
       </p>
     </header>
 
     <section class="card intro-card">
-      <h2>Erste Version</h2>
+      <h2>Umstellwerte</h2>
       <p class="hint">
-        Diese Version arbeitet erstmal mit manueller Eingabe. Später kann Foto- und Texterkennung ergänzt werden, um die Felder automatisch vorzubefüllen.
+        Die Felder entsprechen deiner aktuellen Papierliste. Nur geänderte Werte werden in die Umstellliste übernommen.
       </p>
     </section>
 
-    <section class="form-grid">
-      <section class="card">
-        <h2>Alter Auftrag</h2>
-        <div class="grid two">
-          <label>Auftragsnummer<input id="oldOrder" /></label>
-          <label>Artikel<input id="oldArticle" /></label>
-          <label>Material<input id="oldMaterial" /></label>
-          <label>Farbe<input id="oldColor" /></label>
-          <label>Stärke [µm]<input id="oldThickness" inputmode="decimal" /></label>
-          <label>Breite [mm]<input id="oldWidth" inputmode="decimal" /></label>
-          <label>Rollenlänge [m]<input id="oldRollLength" inputmode="decimal" /></label>
-          <label>Geschwindigkeit [m/min]<input id="oldSpeed" inputmode="decimal" /></label>
-          <label>Pumpe 1 [rpm]<input id="oldPump1" inputmode="decimal" /></label>
-          <label>Pumpe 2 [rpm]<input id="oldPump2" inputmode="decimal" /></label>
-          <label>Korona / Behandlung<input id="oldTreatment" /></label>
-          <label>Verpackung<input id="oldPackaging" /></label>
-        </div>
-      </section>
+    <section class="card comparison-card">
+      <div class="comparison-header">
+        <div></div>
+        <strong>Alt</strong>
+        <strong>Neu</strong>
+      </div>
 
-      <section class="card">
-        <h2>Neuer Auftrag</h2>
-        <div class="grid two">
-          <label>Auftragsnummer<input id="newOrder" /></label>
-          <label>Artikel<input id="newArticle" /></label>
-          <label>Material<input id="newMaterial" /></label>
-          <label>Farbe<input id="newColor" /></label>
-          <label>Stärke [µm]<input id="newThickness" inputmode="decimal" /></label>
-          <label>Breite [mm]<input id="newWidth" inputmode="decimal" /></label>
-          <label>Rollenlänge [m]<input id="newRollLength" inputmode="decimal" /></label>
-          <label>Geschwindigkeit [m/min]<input id="newSpeed" inputmode="decimal" /></label>
-          <label>Pumpe 1 [rpm]<input id="newPump1" inputmode="decimal" /></label>
-          <label>Pumpe 2 [rpm]<input id="newPump2" inputmode="decimal" /></label>
-          <label>Korona / Behandlung<input id="newTreatment" /></label>
-          <label>Verpackung<input id="newPackaging" /></label>
-        </div>
-      </section>
+      <div class="comparison-row">
+        <label>Material</label>
+        <input id="oldMaterial" />
+        <input id="newMaterial" />
+      </div>
+      <div class="comparison-row">
+        <label>Stärke</label>
+        <input id="oldThickness" inputmode="decimal" />
+        <input id="newThickness" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>Breite</label>
+        <input id="oldWidth" inputmode="decimal" />
+        <input id="newWidth" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>Chill</label>
+        <input id="oldChill" />
+        <input id="newChill" />
+      </div>
+      <div class="comparison-row">
+        <label>Pumpe H</label>
+        <input id="oldPumpH" inputmode="decimal" />
+        <input id="newPumpH" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>Pumpe Co</label>
+        <input id="oldPumpCo" inputmode="decimal" />
+        <input id="newPumpCo" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>LFM</label>
+        <input id="oldLfm" inputmode="decimal" />
+        <input id="newLfm" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>KG</label>
+        <input id="oldKg" inputmode="decimal" />
+        <input id="newKg" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>Additiv</label>
+        <input id="oldAdditive" />
+        <input id="newAdditive" />
+      </div>
+      <div class="comparison-row">
+        <label>Puder</label>
+        <input id="oldPowder" />
+        <input id="newPowder" />
+      </div>
+      <div class="comparison-row">
+        <label>Coating</label>
+        <input id="oldCoating" />
+        <input id="newCoating" />
+      </div>
     </section>
 
     <section class="card actions-card">
@@ -78,7 +104,7 @@
       <h2>Umstellliste</h2>
       <p class="hint" id="summaryText">Noch keine Umstellliste erstellt.</p>
       <div id="changeoverList" class="changeover-list">
-        <div class="empty-state">Fülle alten und neuen Auftrag aus und tippe auf „Umstellliste erstellen“.</div>
+        <div class="empty-state">Fülle alte und neue Werte aus und tippe auf „Umstellliste erstellen“.</div>
       </div>
     </section>
 
@@ -90,6 +116,6 @@
     </section>
   </main>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
