@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <main class="app-shell">
@@ -74,21 +74,6 @@
         <input id="newWidth" inputmode="decimal" />
       </div>
       <div class="comparison-row">
-        <label>Chill</label>
-        <input id="oldChill" />
-        <input id="newChill" />
-      </div>
-      <div class="comparison-row">
-        <label>Pumpe H</label>
-        <input id="oldPumpH" inputmode="decimal" />
-        <input id="newPumpH" inputmode="decimal" />
-      </div>
-      <div class="comparison-row">
-        <label>Pumpe Co</label>
-        <input id="oldPumpCo" inputmode="decimal" />
-        <input id="newPumpCo" inputmode="decimal" />
-      </div>
-      <div class="comparison-row">
         <label>LFM</label>
         <input id="oldLfm" inputmode="decimal" />
         <input id="newLfm" inputmode="decimal" />
@@ -113,6 +98,40 @@
         <input id="oldCoating" />
         <input id="newCoating" />
       </div>
+      <div class="comparison-row bottom-group">
+        <label>Chill</label>
+        <input id="oldChill" />
+        <input id="newChill" />
+      </div>
+      <div class="comparison-row">
+        <label>Pumpe H</label>
+        <input id="oldPumpH" inputmode="decimal" />
+        <input id="newPumpH" inputmode="decimal" />
+      </div>
+      <div class="comparison-row">
+        <label>Pumpe Co</label>
+        <input id="oldPumpCo" inputmode="decimal" />
+        <input id="newPumpCo" inputmode="decimal" />
+      </div>
+    </section>
+
+    <section class="card pump-card">
+      <h2>Pumpen-Dreisatz</h2>
+      <p class="hint">
+        Chill alt und Chill neu kommen aus den Aufträgen. Trage deine aktuellen Pumpendrehzahlen ein, dann werden Pumpe H und Pumpe Co für den neuen Auftrag berechnet.
+      </p>
+      <div class="pump-grid">
+        <label>
+          Aktuelle Pumpe H
+          <input id="currentPumpH" inputmode="decimal" />
+        </label>
+        <label>
+          Aktuelle Pumpe Co
+          <input id="currentPumpCo" inputmode="decimal" />
+        </label>
+      </div>
+      <button class="secondary" id="calculatePumpsButton" type="button">Pumpen berechnen</button>
+      <p class="hint" id="pumpStatus">Formel: neue Pumpe = aktuelle Pumpe × Chill neu ÷ Chill alt.</p>
     </section>
 
     <section class="card actions-card">
@@ -137,6 +156,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
