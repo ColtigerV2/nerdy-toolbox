@@ -78,19 +78,6 @@ $('calculateSpeed').addEventListener('click', () => {
   }
 });
 
-$('calculateSamePumpSpeed').addEventListener('click', () => {
-  try {
-    const thickness1 = readNumber('samePumpThickness1', 'Stärke 1');
-    const thickness2 = readNumber('samePumpThickness2', 'Stärke 2');
-    const speed1 = readNumber('samePumpSpeed1', 'Startgeschwindigkeit');
-
-    const speed2 = (thickness1 * speed1) / thickness2;
-    $('resultSamePumpSpeed2').textContent = format(speed2);
-  } catch (error) {
-    showError(error.message);
-  }
-});
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js').catch(() => {
