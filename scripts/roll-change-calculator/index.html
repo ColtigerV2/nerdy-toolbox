@@ -54,10 +54,6 @@
           Rollenlänge [m]
           <input id="targetLength" inputmode="decimal" />
         </label>
-        <label>
-          Vorwarnung [s]
-          <input id="warningSeconds" inputmode="decimal" value="30" />
-        </label>
       </div>
       <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
       <button class="secondary" id="notifyButton">Benachrichtigung aktivieren</button>
@@ -71,9 +67,9 @@
         <small>hh:mm:ss</small>
       </div>
       <div>
-        <span>Vorwarnung</span>
-        <strong id="warningResult">-</strong>
-        <small>Uhr</small>
+        <span>Countdown</span>
+        <strong id="countdownResult">-</strong>
+        <small>bis Wechsel</small>
       </div>
       <div>
         <span>Nächster Wechsel</span>
@@ -94,7 +90,7 @@
       <h2>Rechenbasis</h2>
       <p>Laufzeit Rolle = Rollenlänge ÷ Geschwindigkeit</p>
       <p>Nächster Wechsel = Startzeit + Laufzeit Rolle</p>
-      <p>Vorwarnung wird in Sekunden vor dem Rollenwechsel berechnet.</p>
+      <p>Benachrichtigung erfolgt direkt zum berechneten Wechselzeitpunkt.</p>
     </section>
   </main>
 
