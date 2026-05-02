@@ -3,6 +3,7 @@ const $ = (id) => document.getElementById(id);
 let reminderTimers = [];
 let countdownTimer = null;
 let lastCalculation = null;
+let notificationEnabled = false;
 
 const readNumber = (id, label, options = {}) => {
   const raw = String($(id).value).trim().replace(',', '.');
@@ -55,7 +56,7 @@ const fillStartTime = (date) => {
 
 fillStartTime(new Date());
 
-const readStartDate = () => {
+const readKnownChangeDate = () => {
   const dateValue = $('startDate').value;
   if (!dateValue) {
     throw new Error('Bitte ein Datum eingeben.');
@@ -69,36 +70,33 @@ const readStartDate = () => {
   return new Date(year, month - 1, day, hour, minute, second, 0);
 };
 
-const updateCountdown = () => {
-  if (!lastCalculation) {
-    $('countdownResult').textContent = '-';
-    return;
+const getNextChangeTime = (knownChangeTime, durationSeconds) => {
+  const now = Date.now();
+  const durationMs = durationSeconds * 1000;
+
+  if (durationMs <= 0) {
+    throw new Error('Die Rollenlaufzeit muss größer als null sein.');
   }
 
-  const remainingSeconds = (lastCalculation.changeTime.getTime() - Date.now()) / 1000;
-  $('countdownResult').textContent = formatDuration(remainingSeconds);
-
-  if (remainingSeconds <= 0) {
-    $('statusText').textContent = `Rollenwechsel fällig seit ${formatTime(lastCalculation.changeTime)} Uhr.`;
+  if (knownChangeTime.getTime() > now) {
+    return new Date(knownChangeTime.getTime());
   }
-};
 
-const startCountdown = () => {
-  if (countdownTimer) clearInterval(countdownTimer);
-  updateCountdown();
-  countdownTimer = setInterval(updateCountdown, 1000);
+  const elapsedMs = now - knownChangeTime.getTime();
+  const intervalsPassed = Math.floor(elapsedMs / durationMs) + 1;
+  return new Date(knownChangeTime.getTime() + intervalsPassed * durationMs);
 };
 
 const calculateRollChange = () => {
-  const start = readStartDate();
+  const knownChangeTime = readKnownChangeDate();
   const speed = readNumber('speed', 'Geschwindigkeit');
   const targetLength = readNumber('targetLength', 'Rollenlänge');
 
   const durationSeconds = (targetLength / speed) * 60;
-  const changeTime = new Date(start.getTime() + durationSeconds * 1000);
+  const changeTime = getNextChangeTime(knownChangeTime, durationSeconds);
 
   lastCalculation = {
-    start,
+    knownChangeTime,
     speed,
     targetLength,
     durationSeconds,
@@ -107,10 +105,46 @@ const calculateRollChange = () => {
 
   $('durationResult').textContent = formatDuration(durationSeconds);
   $('changeResult').textContent = formatTime(changeTime);
-  $('statusText').textContent = `Berechnet: nächster Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
+  $('statusText').textContent = `Automatik aktiv. Nächster Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
   startCountdown();
 
+  if (notificationEnabled) {
+    scheduleDirectReminder(lastCalculation);
+  }
+
   return lastCalculation;
+};
+
+const updateCountdown = () => {
+  if (!lastCalculation) {
+    $('countdownResult').textContent = '-';
+    return;
+  }
+
+  const remainingSeconds = (lastCalculation.changeTime.getTime() - Date.now()) / 1000;
+
+  if (remainingSeconds <= 0) {
+    if (notificationEnabled) {
+      notify('Rollenwechsel fällig', `Soll-Länge erreicht. Wechselzeit: ${formatTime(lastCalculation.changeTime)} Uhr.`);
+    }
+
+    lastCalculation.changeTime = new Date(lastCalculation.changeTime.getTime() + lastCalculation.durationSeconds * 1000);
+    $('changeResult').textContent = formatTime(lastCalculation.changeTime);
+    $('statusText').textContent = `Wechsel erreicht. Nächster Rollenwechsel um ${formatTime(lastCalculation.changeTime)} Uhr.`;
+
+    if (notificationEnabled) {
+      scheduleDirectReminder(lastCalculation);
+    }
+  }
+
+  const nextRemainingSeconds = (lastCalculation.changeTime.getTime() - Date.now()) / 1000;
+  $('countdownResult').textContent = formatDuration(nextRemainingSeconds);
+};
+
+const startCountdown = () => {
+  if (countdownTimer) clearInterval(countdownTimer);
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
 };
 
 $('calculateButton').addEventListener('click', () => {
@@ -126,8 +160,7 @@ $('completeChangeButton').addEventListener('click', () => {
     const now = new Date();
     fillStartTime(now);
     const calculation = calculateRollChange();
-    clearReminders();
-    $('statusText').textContent = `Wechsel erledigt um ${formatTime(now)} Uhr. Nächster Wechsel: ${formatTime(calculation.changeTime)} Uhr.`;
+    $('statusText').textContent = `Wechsel jetzt übernommen um ${formatTime(now)} Uhr. Nächster Wechsel: ${formatTime(calculation.changeTime)} Uhr.`;
   } catch (error) {
     alert(error.message);
   }
@@ -150,7 +183,18 @@ const notify = (title, body) => {
   alert(`${title}\n\n${body}`);
 };
 
-const scheduleReminder = async () => {
+const scheduleDirectReminder = (calculation) => {
+  clearReminders();
+  const changeDelay = calculation.changeTime.getTime() - Date.now();
+
+  if (changeDelay <= 0) return;
+
+  reminderTimers.push(setTimeout(() => {
+    notify('Rollenwechsel fällig', `Soll-Länge erreicht. Wechselzeit: ${formatTime(calculation.changeTime)} Uhr.`);
+  }, changeDelay));
+};
+
+const enableNotifications = async () => {
   try {
     const calculation = calculateRollChange();
 
@@ -160,25 +204,15 @@ const scheduleReminder = async () => {
       await Notification.requestPermission();
     }
 
-    clearReminders();
-
-    const changeDelay = calculation.changeTime.getTime() - Date.now();
-
-    if (changeDelay <= 0) {
-      throw new Error('Die berechnete Wechselzeit liegt bereits in der Vergangenheit.');
-    }
-
-    reminderTimers.push(setTimeout(() => {
-      notify('Rollenwechsel fällig', `Soll-Länge erreicht. Wechselzeit: ${formatTime(calculation.changeTime)} Uhr.`);
-    }, changeDelay));
-
-    $('statusText').textContent = `Benachrichtigung aktiv: Wechsel ${formatTime(calculation.changeTime)} Uhr.`;
+    notificationEnabled = true;
+    scheduleDirectReminder(calculation);
+    $('statusText').textContent = `Benachrichtigung aktiv. Nächster Wechsel ${formatTime(calculation.changeTime)} Uhr.`;
   } catch (error) {
     alert(error.message);
   }
 };
 
-$('notifyButton').addEventListener('click', scheduleReminder);
+$('notifyButton').addEventListener('click', enableNotifications);
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
