@@ -50,6 +50,7 @@
     <section class="tabs" aria-label="Berechnungsarten">
       <button class="tab active" data-tab="pumps">Berechnung p1 + p2</button>
       <button class="tab" data-tab="speed">Berechnung v + p2</button>
+      <button class="tab" data-tab="same-pumps">v bei gleicher Pumpe</button>
     </section>
 
     <section class="card tab-panel active" id="tab-pumps">
@@ -92,10 +93,36 @@
       </div>
     </section>
 
+    <section class="card tab-panel" id="tab-same-pumps">
+      <h2>Geschwindigkeit bei gleicher Pumpe</h2>
+      <p class="hint">Wenn die Pumpen gleich bleiben, bleibt der Durchsatz gleich. Aus Stärke 1, Stärke 2 und Startgeschwindigkeit wird die neue Geschwindigkeit berechnet.</p>
+      <div class="grid two">
+        <label>
+          Stärke 1 [µm]
+          <input id="samePumpThickness1" inputmode="decimal" />
+        </label>
+        <label>
+          Stärke 2 [µm]
+          <input id="samePumpThickness2" inputmode="decimal" />
+        </label>
+        <label>
+          Startgeschwindigkeit [m/min]
+          <input id="samePumpSpeed1" inputmode="decimal" />
+        </label>
+      </div>
+      <button class="primary" id="calculateSamePumpSpeed">Berechnen</button>
+      <div class="results">
+        <div><span>Geschwindigkeit 2</span><strong id="resultSamePumpSpeed2">-</strong><small>m/min</small></div>
+      </div>
+    </section>
+
     <section class="card formula-card">
       <h2>Rechenbasis</h2>
       <p>
         Basisfaktor = aktuelle Stärke × aktuelle Geschwindigkeit. Zielwerte werden proportional über diesen Faktor skaliert.
+      </p>
+      <p>
+        Bei gleicher Pumpe gilt: Geschwindigkeit 2 = Stärke 1 × Geschwindigkeit 1 ÷ Stärke 2.
       </p>
       <p>
         Beispiel: 364 µm, 90 m/min, P1 52 rpm, P2 29,7 rpm → bei 233 µm und 150 m/min ergibt das P1 55,5 rpm und P2 31,7 rpm.
