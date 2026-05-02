@@ -20,14 +20,13 @@
       <p class="eyebrow">ColtigerV2 Script</p>
       <h1>Rollenwechsel Rechner</h1>
       <p>
-        Startpunkt, Geschwindigkeit, Rollenlänge und Anzahl der Wechsel eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel und das Auftragsende fällig sind.
+        Startpunkt, Geschwindigkeit und Rollenlänge eingeben. Die App berechnet sekundengenau, wann der nächste Rollenwechsel fällig ist.
       </p>
     </header>
 
     <section class="card">
       <h2>Eingabe</h2>
       <p class="hint">Die Laufzeit pro Rolle ergibt sich aus Rollenlänge geteilt durch Geschwindigkeit.</p>
-      <button class="time-button" id="useNowButton" type="button">Aktuelle Zeit übernehmen</button>
       <div class="grid two">
         <label class="wide-field">
           Datum
@@ -59,14 +58,6 @@
           Vorwarnung [s]
           <input id="warningSeconds" inputmode="decimal" value="30" />
         </label>
-        <label>
-          Wechsel gesamt [Stück]
-          <input id="orderChanges" inputmode="numeric" />
-        </label>
-        <label>
-          Produzierte Wechsel [Stück]
-          <input id="currentChanges" inputmode="numeric" value="0" />
-        </label>
       </div>
       <button class="primary" id="calculateButton">Wechselzeit berechnen</button>
       <button class="secondary" id="notifyButton">Benachrichtigung aktivieren</button>
@@ -89,39 +80,6 @@
         <strong id="changeResult">-</strong>
         <small>Uhr</small>
       </div>
-      <div>
-        <span>Restwechsel</span>
-        <strong id="remainingChangesResult">-</strong>
-        <small>Stück</small>
-      </div>
-      <div>
-        <span>Restlänge</span>
-        <strong id="remainingLengthResult">-</strong>
-        <small>m</small>
-      </div>
-      <div>
-        <span>Auftragsende</span>
-        <strong id="orderEndResult">-</strong>
-        <small>Uhr</small>
-      </div>
-    </section>
-
-    <section class="card schedule-card">
-      <h2>Nächste Wechsel bis Auftragsende</h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Wechselzeit</th>
-              <th>Vorwarnung</th>
-            </tr>
-          </thead>
-          <tbody id="scheduleBody">
-            <tr><td colspan="3">Noch keine Berechnung.</td></tr>
-          </tbody>
-        </table>
-      </div>
     </section>
 
     <section class="card status-card">
@@ -136,9 +94,6 @@
       <h2>Rechenbasis</h2>
       <p>Laufzeit Rolle = Rollenlänge ÷ Geschwindigkeit</p>
       <p>Nächster Wechsel = Startzeit + Laufzeit Rolle</p>
-      <p>Restwechsel = Wechsel gesamt - produzierte Wechsel</p>
-      <p>Restlänge = Restwechsel × Rollenlänge</p>
-      <p>Auftragsende = Startzeit + (Restlänge ÷ Geschwindigkeit)</p>
       <p>Vorwarnung wird in Sekunden vor dem Rollenwechsel berechnet.</p>
     </section>
   </main>
