@@ -155,17 +155,6 @@ $('calculateButton').addEventListener('click', () => {
   }
 });
 
-$('completeChangeButton').addEventListener('click', () => {
-  try {
-    const now = new Date();
-    fillStartTime(now);
-    const calculation = calculateRollChange();
-    $('statusText').textContent = `Wechsel jetzt übernommen um ${formatTime(now)} Uhr. Nächster Wechsel: ${formatTime(calculation.changeTime)} Uhr.`;
-  } catch (error) {
-    alert(error.message);
-  }
-});
-
 const clearReminders = () => {
   reminderTimers.forEach((timer) => clearTimeout(timer));
   reminderTimers = [];
