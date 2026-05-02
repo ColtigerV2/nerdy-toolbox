@@ -28,10 +28,24 @@
       <h2>Eingabe</h2>
       <p class="hint">Die Laufzeit pro Rolle ergibt sich aus Rollenlänge geteilt durch Geschwindigkeit.</p>
       <div class="grid two">
-        <label>
-          Startzeit
-          <input id="startTime" type="datetime-local" step="1" />
+        <label class="wide-field">
+          Datum
+          <input id="startDate" type="date" />
         </label>
+        <div class="time-grid wide-field" aria-label="Startzeit mit Sekunden">
+          <label>
+            Stunde
+            <input id="startHour" type="number" inputmode="numeric" min="0" max="23" />
+          </label>
+          <label>
+            Minute
+            <input id="startMinute" type="number" inputmode="numeric" min="0" max="59" />
+          </label>
+          <label>
+            Sekunde
+            <input id="startSecond" type="number" inputmode="numeric" min="0" max="59" />
+          </label>
+        </div>
         <label>
           Geschwindigkeit [m/min]
           <input id="speed" inputmode="decimal" />
