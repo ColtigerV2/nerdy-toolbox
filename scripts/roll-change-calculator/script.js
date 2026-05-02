@@ -15,13 +15,13 @@ const readNumber = (id, label, options = {}) => {
   return value;
 };
 
-const readOptionalPositiveNumber = (id) => {
+const readOptionalPositiveNumber = (id, label) => {
   const raw = String($(id).value).trim();
   if (!raw) return null;
 
   const value = Number(raw.replace(',', '.'));
   if (!Number.isFinite(value) || value <= 0) {
-    throw new Error('Auftragslänge gesamt muss größer als null sein.');
+    throw new Error(`${label} muss größer als null sein.`);
   }
 
   return value;
@@ -67,15 +67,15 @@ const calculateRollChange = () => {
   const speed = readNumber('speed', 'Geschwindigkeit');
   const targetLength = readNumber('targetLength', 'Rollenlänge');
   const warningSeconds = Number(String($('warningSeconds').value || '0').replace(',', '.'));
-  const orderLength = readOptionalPositiveNumber('orderLength');
-  const currentLength = readNumber('currentLength', 'Bereits gelaufen', { allowZero: true });
+  const orderChanges = readOptionalPositiveNumber('orderChanges', 'Wechsel gesamt');
+  const currentChanges = readNumber('currentChanges', 'Produzierte Wechsel', { allowZero: true });
 
   if (!Number.isFinite(warningSeconds) || warningSeconds < 0) {
     throw new Error('Vorwarnung darf nicht negativ sein.');
   }
 
-  if (orderLength !== null && currentLength > orderLength) {
-    throw new Error('Bereits gelaufen darf nicht größer als die Auftragslänge sein.');
+  if (orderChanges !== null && currentChanges > orderChanges) {
+    throw new Error('Produzierte Wechsel dürfen nicht größer als Wechsel gesamt sein.');
   }
 
   const durationSeconds = (targetLength / speed) * 60;
@@ -86,9 +86,9 @@ const calculateRollChange = () => {
   let remainingChanges = null;
   let orderEndTime = null;
 
-  if (orderLength !== null) {
-    remainingLength = Math.max(0, orderLength - currentLength);
-    remainingChanges = Math.ceil(remainingLength / targetLength);
+  if (orderChanges !== null) {
+    remainingChanges = Math.max(0, Math.ceil(orderChanges - currentChanges));
+    remainingLength = remainingChanges * targetLength;
     const orderDurationSeconds = (remainingLength / speed) * 60;
     orderEndTime = new Date(start.getTime() + orderDurationSeconds * 1000);
   }
@@ -101,8 +101,8 @@ const calculateRollChange = () => {
     durationSeconds,
     changeTime,
     warningTime,
-    orderLength,
-    currentLength,
+    orderChanges,
+    currentChanges,
     remainingLength,
     remainingChanges,
     orderEndTime,
