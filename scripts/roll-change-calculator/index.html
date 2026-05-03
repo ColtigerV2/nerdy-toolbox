@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/icon.svg" />
-  <link rel="stylesheet" href="style.css?v=11" />
+  <link rel="stylesheet" href="style.css?v=12" />
 </head>
 <body>
   <main class="app-shell">
@@ -87,12 +87,12 @@
 
     <section class="card formula-card">
       <h2>Rechenbasis</h2>
-      <p>Laufzeit Rolle = Rollenlänge ÷ Geschwindigkeit</p>
+      <p>Laufzeit Rolle = Rollenlänge ÷ korrigierte Geschwindigkeit</p>
+      <p>Die angezeigte Geschwindigkeit wird intern mit 0,991 multipliziert, um den beobachteten Maschinenversatz auszugleichen.</p>
       <p>Nächster Wechsel = erster Wechselzeitpunkt in der Zukunft auf Basis des bekannten Wechselzeitpunkts</p>
-      <p>Benachrichtigung erfolgt direkt zum berechneten Wechselzeitpunkt.</p>
     </section>
   </main>
 
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=12"></script>
 </body>
 </html>
