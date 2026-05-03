@@ -1,5 +1,7 @@
 const $ = (id) => document.getElementById(id);
 
+const SPEED_CORRECTION_FACTOR = 0.991;
+
 let reminderTimers = [];
 let countdownTimer = null;
 let lastCalculation = null;
@@ -46,6 +48,11 @@ const formatDuration = (seconds) => {
   return `${pad(hours)}:${pad(minutes)}:${pad(restSeconds)}`;
 };
 
+const formatSpeed = (value) => value.toLocaleString('de-DE', {
+  maximumFractionDigits: 1,
+  minimumFractionDigits: 1,
+});
+
 const fillStartTime = (date) => {
   date.setMilliseconds(0);
   $('startDate').value = formatDateInput(date);
@@ -89,15 +96,17 @@ const getNextChangeTime = (knownChangeTime, durationSeconds) => {
 
 const calculateRollChange = () => {
   const knownChangeTime = readKnownChangeDate();
-  const speed = readNumber('speed', 'Geschwindigkeit');
+  const displayedSpeed = readNumber('speed', 'Geschwindigkeit');
+  const effectiveSpeed = displayedSpeed * SPEED_CORRECTION_FACTOR;
   const targetLength = readNumber('targetLength', 'Rollenlänge');
 
-  const durationSeconds = (targetLength / speed) * 60;
+  const durationSeconds = (targetLength / effectiveSpeed) * 60;
   const changeTime = getNextChangeTime(knownChangeTime, durationSeconds);
 
   lastCalculation = {
     knownChangeTime,
-    speed,
+    displayedSpeed,
+    effectiveSpeed,
     targetLength,
     durationSeconds,
     changeTime,
@@ -105,7 +114,7 @@ const calculateRollChange = () => {
 
   $('durationResult').textContent = formatDuration(durationSeconds);
   $('changeResult').textContent = formatTime(changeTime);
-  $('statusText').textContent = `Automatik aktiv. Nächster Rollenwechsel um ${formatTime(changeTime)} Uhr.`;
+  $('statusText').textContent = `Automatik aktiv. Nächster Rollenwechsel um ${formatTime(changeTime)} Uhr. Intern gerechnet mit ${formatSpeed(effectiveSpeed)} m/min.`;
   startCountdown();
 
   if (notificationEnabled) {
@@ -130,7 +139,7 @@ const updateCountdown = () => {
 
     lastCalculation.changeTime = new Date(lastCalculation.changeTime.getTime() + lastCalculation.durationSeconds * 1000);
     $('changeResult').textContent = formatTime(lastCalculation.changeTime);
-    $('statusText').textContent = `Wechsel erreicht. Nächster Rollenwechsel um ${formatTime(lastCalculation.changeTime)} Uhr.`;
+    $('statusText').textContent = `Wechsel erreicht. Nächster Rollenwechsel um ${formatTime(lastCalculation.changeTime)} Uhr. Intern gerechnet mit ${formatSpeed(lastCalculation.effectiveSpeed)} m/min.`;
 
     if (notificationEnabled) {
       scheduleDirectReminder(lastCalculation);
@@ -195,7 +204,7 @@ const enableNotifications = async () => {
 
     notificationEnabled = true;
     scheduleDirectReminder(calculation);
-    $('statusText').textContent = `Benachrichtigung aktiv. Nächster Wechsel ${formatTime(calculation.changeTime)} Uhr.`;
+    $('statusText').textContent = `Benachrichtigung aktiv. Nächster Wechsel ${formatTime(calculation.changeTime)} Uhr. Intern gerechnet mit ${formatSpeed(calculation.effectiveSpeed)} m/min.`;
   } catch (error) {
     alert(error.message);
   }
