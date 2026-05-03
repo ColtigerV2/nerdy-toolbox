@@ -1,9 +1,9 @@
-const CACHE_NAME = 'roll-change-calculator-v11';
+const CACHE_NAME = 'roll-change-calculator-v12';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=11',
-  './script.js?v=11',
+  './style.css?v=12',
+  './script.js?v=12',
   './manifest.json',
   './icons/icon.svg'
 ];
