@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stempelzeiten</title>
+  <meta name="description" content="Privater Stempelzeiten-Tracker mit lokalem Speicher, CSV-Export und JSON-Backup." />
+  <meta name="theme-color" content="#0f2f22" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">ColtigerV2 Toolbox</p>
+      <h1>Stempelzeiten</h1>
+      <p class="hero-text">Zeiten lokal erfassen, auswerten und als CSV oder Backup-Datei sichern.</p>
+    </header>
+
+    <section class="card today-card" aria-labelledby="todayTitle">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Heute</p>
+          <h2 id="todayTitle">Schnellerfassung</h2>
+        </div>
+        <span id="todayDate" class="badge">--</span>
+      </div>
+
+      <div class="quick-actions">
+        <button id="clockInBtn" type="button">Kommen</button>
+        <button id="breakStartBtn" type="button" class="secondary">Pause Start</button>
+        <button id="breakEndBtn" type="button" class="secondary">Pause Ende</button>
+        <button id="clockOutBtn" type="button">Gehen</button>
+      </div>
+
+      <div class="grid two-cols">
+        <label>Kommen
+          <input id="startTime" type="time" step="60" />
+        </label>
+        <label>Gehen
+          <input id="endTime" type="time" step="60" />
+        </label>
+        <label>Pause Start
+          <input id="breakStart" type="time" step="60" />
+        </label>
+        <label>Pause Ende
+          <input id="breakEnd" type="time" step="60" />
+        </label>
+      </div>
+
+      <label>Notiz
+        <input id="note" type="text" placeholder="z. B. Frühschicht, Urlaub, Korrektur" />
+      </label>
+
+      <div class="summary-strip">
+        <div><span>Brutto</span><strong id="grossToday">--:--</strong></div>
+        <div><span>Pause</span><strong id="breakToday">--:--</strong></div>
+        <div><span>Netto</span><strong id="netToday">--:--</strong></div>
+      </div>
+
+      <div class="button-row">
+        <button id="saveDayBtn" type="button">Tag speichern</button>
+        <button id="clearDayBtn" type="button" class="ghost">Heute leeren</button>
+      </div>
+      <p id="status" class="status" role="status"></p>
+    </section>
+
+    <section class="card" aria-labelledby="manualTitle">
+      <details>
+        <summary id="manualTitle">Manuellen Tag hinzufügen / bearbeiten</summary>
+        <div class="manual-grid">
+          <label>Datum
+            <input id="manualDate" type="date" />
+          </label>
+          <label>Kommen
+            <input id="manualStart" type="time" step="60" />
+          </label>
+          <label>Gehen
+            <input id="manualEnd" type="time" step="60" />
+          </label>
+          <label>Pause [min]
+            <input id="manualBreak" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label>Notiz
+            <input id="manualNote" type="text" />
+          </label>
+        </div>
+        <button id="saveManualBtn" type="button" class="secondary">Manuellen Eintrag speichern</button>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="monthTitle">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Übersicht</p>
+          <h2 id="monthTitle">Monat</h2>
+        </div>
+        <input id="monthPicker" class="month-picker" type="month" />
+      </div>
+      <div class="summary-strip">
+        <div><span>Tage</span><strong id="monthDays">0</strong></div>
+        <div><span>Netto gesamt</span><strong id="monthNet">00:00</strong></div>
+        <div><span>Pause gesamt</span><strong id="monthBreak">00:00</strong></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="listTitle">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Liste</p>
+          <h2 id="listTitle">Gespeicherte Tage</h2>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Kommen</th>
+              <th>Gehen</th>
+              <th>Pause</th>
+              <th>Netto</th>
+              <th>Notiz</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="backupTitle">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Sicherung</p>
+          <h2 id="backupTitle">Export & Backup</h2>
+        </div>
+      </div>
+      <div class="button-row wrap">
+        <button id="exportCsvBtn" type="button" class="secondary">CSV exportieren</button>
+        <button id="exportJsonBtn" type="button" class="secondary">JSON-Backup exportieren</button>
+        <label class="file-button">JSON-Backup importieren
+          <input id="importJsonInput" type="file" accept="application/json,.json" />
+        </label>
+      </div>
+      <p class="hint">Deine Daten werden lokal im Browser gespeichert. Das JSON-Backup ist die sichere Wiederherstellungsdatei.</p>
+    </section>
+  </main>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
