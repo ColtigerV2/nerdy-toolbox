@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rollenberechnung</title>
+  <meta name="description" content="Berechnung von Rollendurchmesser, Rollenlänge und Rollengewicht." />
+  <meta name="theme-color" content="#0f2f22" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css?v=1" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="eyebrow">ColtigerV2 Toolbox</p>
+      <h1>Rollenberechnung</h1>
+      <p class="hero-text">Berechne Durchmesser, Gewicht oder Länge einer Rolle anhand von Stärke, Breite, Material und Hülse.</p>
+    </header>
+
+    <section class="card" aria-labelledby="baseTitle">
+      <div class="section-header">
+        <div>
+          <p class="eyebrow">Basisdaten</p>
+          <h2 id="baseTitle">Rollenangaben</h2>
+        </div>
+      </div>
+
+      <div class="segmented" role="group" aria-label="Materialauswahl">
+        <label><input type="radio" name="materialType" value="PET" checked /> PET</label>
+        <label><input type="radio" name="materialType" value="PP" /> PP</label>
+      </div>
+
+      <div class="grid">
+        <label>PET-Stärke [µ]
+          <input id="petThickness" type="number" inputmode="decimal" step="0.1" min="0" />
+        </label>
+        <label>PE-Stärke [µ]
+          <input id="peThickness" type="number" inputmode="decimal" step="0.1" min="0" />
+        </label>
+        <label>Rollenbreite [mm]
+          <input id="widthMm" type="number" inputmode="decimal" step="0.1" min="0" />
+        </label>
+        <label>Hülse
+          <select id="coreSelect">
+            <option value="95">Hülse 76</option>
+            <option value="177" selected>Hülse 152</option>
+            <option value="225">Hülse 201</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="summary-grid">
+        <div><span>Gesamtstärke</span><strong id="totalThickness">-- µ</strong></div>
+        <div><span>spez. Gewicht</span><strong id="densityValue">-- g/cm³</strong></div>
+        <div><span>Hülsendurchmesser außen</span><strong id="coreDiameter">-- mm</strong></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="lengthTitle">
+      <h2 id="lengthTitle">1. Rollenlänge → Durchmesser & Gewicht</h2>
+      <div class="calc-row">
+        <label>Rollenlänge [LFM]
+          <input id="lengthInput" type="number" inputmode="decimal" step="1" min="0" />
+        </label>
+        <button id="calcFromLength" type="button">Berechnen</button>
+      </div>
+      <div class="result-grid">
+        <div><span>Durchmesser</span><strong id="diameterFromLength">-- mm</strong></div>
+        <div><span>Gewicht</span><strong id="weightFromLength">-- kg</strong></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="diameterTitle">
+      <h2 id="diameterTitle">2. Durchmesser → Rollenlänge & Gewicht</h2>
+      <div class="calc-row">
+        <label>Rollendurchmesser [mm]
+          <input id="diameterInput" type="number" inputmode="decimal" step="1" min="0" />
+        </label>
+        <button id="calcFromDiameter" type="button">Berechnen</button>
+      </div>
+      <div class="result-grid">
+        <div><span>Rollenlänge</span><strong id="lengthFromDiameter">-- LFM</strong></div>
+        <div><span>Gewicht</span><strong id="weightFromDiameter">-- kg</strong></div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="weightTitle">
+      <h2 id="weightTitle">3. Gewicht → Rollenlänge & Durchmesser</h2>
+      <div class="calc-row">
+        <label>Rollengewicht [kg]
+          <input id="weightInput" type="number" inputmode="decimal" step="0.1" min="0" />
+        </label>
+        <button id="calcFromWeight" type="button">Berechnen</button>
+      </div>
+      <div class="result-grid">
+        <div><span>Rollenlänge</span><strong id="lengthFromWeight">-- LFM</strong></div>
+        <div><span>Durchmesser</span><strong id="diameterFromWeight">-- mm</strong></div>
+      </div>
+    </section>
+
+    <section class="card info-card">
+      <h2>Hinweis</h2>
+      <p>Die Berechnung nutzt die Rollen-Geometrie und das spezifische Gewicht. Die gelben Excel-Eingabefelder wurden als mobile Web-App nachgebaut.</p>
+    </section>
+  </main>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
