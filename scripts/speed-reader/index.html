@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lesefokus: Wort-für-Wort Speed Reader für konzentriertes Lesen." />
+  <meta name="theme-color" content="#22c55e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Lesefokus" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Lesefokus</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <p class="eyebrow">ColtigerV2 Script</p>
+      <h1>Lesefokus</h1>
+      <p>Text einfügen, starten und Wort für Wort lesen, ohne dass die Augen über die Zeilen wandern müssen.</p>
+    </header>
+
+    <section class="card input-card">
+      <h2>Text</h2>
+      <p class="hint">Füge deinen Text ein. Beim Start wird er automatisch in einzelne Wörter zerlegt.</p>
+      <textarea id="textInput" placeholder="Text hier einfügen..."></textarea>
+      <div class="input-actions">
+        <button class="secondary" id="loadButton" type="button">Text laden</button>
+        <button class="secondary" id="clearButton" type="button">Löschen</button>
+      </div>
+    </section>
+
+    <section class="reader-card">
+      <div class="word-box" aria-live="polite">
+        <span id="currentWord">Bereit</span>
+      </div>
+      <div class="reader-info">
+        <span id="speedLabel">250 WPM</span>
+        <span id="progressLabel">0 / 0</span>
+      </div>
+      <div class="progress-bar" aria-label="Lesefortschritt">
+        <div id="progressBar"></div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Lesesteuerung">
+      <button class="secondary" id="slowerButton" type="button">Langsamer</button>
+      <button class="primary" id="playPauseButton" type="button">Start</button>
+      <button class="secondary" id="fasterButton" type="button">Schneller</button>
+    </section>
+
+    <section class="card status-card">
+      <h2>Status</h2>
+      <p id="statusText">Noch kein Text geladen.</p>
+      <button class="secondary" id="resetButton" type="button">Zum Anfang</button>
+    </section>
+
+    <section class="card formula-card">
+      <h2>Hinweis</h2>
+      <p>Standardtempo: 250 Wörter pro Minute. Langsamer und schneller ändern das Tempo in 25er-Schritten.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
