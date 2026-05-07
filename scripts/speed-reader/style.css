@@ -119,16 +119,22 @@ textarea:focus {
   min-height: clamp(160px, 38vw, 280px);
   display: grid;
   place-items: center;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 28px;
+  padding: clamp(14px, 4vw, 30px);
   background: rgba(5, 14, 10, 0.58);
 }
 
 #currentWord {
   display: block;
   max-width: 100%;
-  overflow-wrap: anywhere;
-  font-size: clamp(2.8rem, 15vw, 8rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  font-size: var(--word-size, clamp(2.8rem, 15vw, 8rem));
   font-weight: 950;
   letter-spacing: -0.08em;
   line-height: 0.95;
