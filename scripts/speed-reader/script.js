@@ -18,6 +18,24 @@ const splitText = (text) => text
 
 const intervalMs = () => Math.round(60000 / wpm);
 
+const updateWordSize = () => {
+  const word = $('currentWord').textContent || '';
+  const length = word.length;
+  let size = 'clamp(2.8rem, 15vw, 8rem)';
+
+  if (length > 28) {
+    size = 'clamp(1.4rem, 6vw, 3.2rem)';
+  } else if (length > 22) {
+    size = 'clamp(1.8rem, 8vw, 4.2rem)';
+  } else if (length > 16) {
+    size = 'clamp(2.1rem, 10vw, 5.4rem)';
+  } else if (length > 11) {
+    size = 'clamp(2.4rem, 12vw, 6.5rem)';
+  }
+
+  $('currentWord').style.setProperty('--word-size', size);
+};
+
 const updateLabels = () => {
   $('speedLabel').textContent = `${wpm} WPM`;
   $('progressLabel').textContent = `${words.length ? index + 1 : 0} / ${words.length}`;
@@ -28,11 +46,13 @@ const updateLabels = () => {
 const showWord = () => {
   if (!words.length) {
     $('currentWord').textContent = 'Bereit';
+    updateWordSize();
     updateLabels();
     return;
   }
 
   $('currentWord').textContent = words[index] || 'Ende';
+  updateWordSize();
   updateLabels();
 };
 
@@ -97,6 +117,7 @@ const clearAll = () => {
   index = 0;
   $('textInput').value = '';
   $('currentWord').textContent = 'Bereit';
+  updateWordSize();
   $('statusText').textContent = 'Noch kein Text geladen.';
   updateLabels();
 };
@@ -131,11 +152,13 @@ $('textInput').addEventListener('input', () => {
     words = [];
     index = 0;
     $('currentWord').textContent = 'Bereit';
+    updateWordSize();
     $('statusText').textContent = 'Text geändert. Zum Starten Text laden oder Start drücken.';
     updateLabels();
   }
 });
 
+updateWordSize();
 updateLabels();
 
 if ('serviceWorker' in navigator) {
